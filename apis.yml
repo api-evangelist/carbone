@@ -1,0 +1,29 @@
+aid: carbone
+url: https://raw.githubusercontent.com/api-evangelist/carbone/refs/heads/main/apis.yml
+name: Carbone
+x-type: company
+description: >-
+  Carbone is a document generation engine that uses Word/Excel/PowerPoint templates with JSON data to produce PDFs or office docs. Open source + cloud.
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Document Generation
+  - PDF
+  - Templates
+  - Open Source
+  - Office
+created: '2026-05-08'
+modified: '2026-05-08'
+specificationVersion: '0.19'
+apis: []
+common:
+  - type: Website
+    url: https://carbone.io/
+  - type: Plans
+    url: plans/carbone-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/carbone-rate-limits.yml
+  - type: FinOps
+    url: finops/carbone-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
