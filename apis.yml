@@ -3,7 +3,11 @@ url: https://raw.githubusercontent.com/api-evangelist/carbone/refs/heads/main/ap
 name: Carbone
 x-type: company
 description: >-
-  Carbone is a document generation engine that uses Word/Excel/PowerPoint templates with JSON data to produce PDFs or office docs. Open source + cloud.
+  Carbone is a document generation engine that uses Word, Excel, PowerPoint
+  and ODF templates with JSON data to produce PDFs or office documents. The
+  Carbone HTTP API offers a template-then-render workflow with both cloud
+  (api.carbone.io) and on-prem deployments. The Carbone JS rendering engine
+  is open-source and embeddable.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
   - Document Generation
@@ -11,13 +15,77 @@ tags:
   - Templates
   - Open Source
   - Office
+  - DOCX
+  - XLSX
 created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.19'
-apis: []
+apis:
+  - aid: carbone:cloud
+    name: Carbone Cloud HTTP API
+    description: >-
+      Cloud-hosted Carbone API. Two flows — upload-once via POST /template
+      then render with a template ID; or single-request inline-base64 render.
+      Bearer-token auth (Authorization header). Sync and async via webhooks.
+      Hosted on European providers (OVHCloud, Scaleway, BunnyCDN).
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://carbone.io/api-reference.html
+    baseURL: https://api.carbone.io
+    tags:
+      - REST
+      - Templates
+      - Render
+      - Async
+      - Webhooks
+    properties:
+      - type: Documentation
+        url: https://carbone.io/api-reference.html
+      - type: Authentication
+        url: https://carbone.io/api-reference.html#authentication
+      - type: SDK
+        url: https://github.com/carboneio/carbone-sdk-js
+  - aid: carbone:on-prem
+    name: Carbone On-Premises
+    description: >-
+      Self-hosted Carbone deployment exposing the same HTTP API. Auth disabled
+      by default; enable via configuration. 30-day free trial of paid features.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://carbone.io/documentation.html
+    baseURL: http://<your-host>:4000
+    tags:
+      - REST
+      - Self-Hosted
+      - On-Prem
+    properties:
+      - type: Documentation
+        url: https://carbone.io/documentation.html
+  - aid: carbone:js
+    name: Carbone Render Engine (Open Source)
+    description: >-
+      Open-source Node.js library that powers the rendering engine. Embed
+      directly in your application; render templates with JSON data without
+      hitting the cloud API.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://github.com/carboneio/carbone
+    baseURL: npm:carbone
+    tags:
+      - SDK
+      - Open Source
+      - Node.js
+    properties:
+      - type: SourceCode
+        url: https://github.com/carboneio/carbone
+      - type: Documentation
+        url: https://carbone.io/documentation.html
 common:
   - type: Website
     url: https://carbone.io/
+  - type: Documentation
+    url: https://carbone.io/documentation.html
+  - type: Pricing
+    url: https://carbone.io/pricing.html
+  - type: GitHub
+    url: https://github.com/carboneio
   - type: Plans
     url: plans/carbone-plans-pricing.yml
   - type: RateLimits

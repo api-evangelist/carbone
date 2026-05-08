@@ -5,7 +5,7 @@ provider: Carbone
 providerId: carbone
 created: '2026-05-08'
 modified: '2026-05-08'
-reconciled: false
+reconciled: true
 tags:
 - Document Generation
 - PDF
@@ -15,10 +15,18 @@ tags:
 - FinOps
 - Cost Management
 - FOCUS
-description: FOCUS-aligned FinOps placeholder for Carbone. Pipeline will replace with real billing details.
-notes: Initial scaffold — billing model has not yet been reconciled.
+description: >-
+  FOCUS-aligned FinOps profile for Carbone. Costs come from one of three
+  tracks — Cloud subscription (Free/Essential/Essential Plus/Advanced/
+  Advanced Plus/Advanced Ultra), On-Prem annual license (Free/Fit/Unlimited)
+  or AWS Private Cloud per-document usage. The OSS rendering engine remains
+  free for embed.
+notes: >-
+  Carbone documents are accounted per 1 MB of injected JSON, so high-volume
+  small documents may be cheaper than expected; large datasets-per-render
+  may push usage faster than document count alone suggests.
 sources:
-- https://carbone.io/
+- https://carbone.io/pricing.html
 - https://focus.finops.org/focus-specification/v1-3/
 alignedWith:
   framework: FinOps Foundation Framework
@@ -29,9 +37,9 @@ alignedWith:
 publisherName: Carbone
 serviceCategory: Document Generation
 billingModel:
-  pricingCategory: To Be Reconciled
-  billingFrequency: Monthly
-  billingCurrency: USD
+  pricingCategory: Subscription / Usage / License
+  billingFrequency: Monthly / Annual / PAYG
+  billingCurrency: USD (FR VAT may apply for EU)
   chargeCategories:
   - Usage
   - Purchase
@@ -44,23 +52,51 @@ focusColumns:
   InvoiceIssuerName: Carbone
   BillingCurrency: USD
   ChargeCategory: Usage
+  PricingUnit: plan-month / document
 meters:
-- name: api_usage
-  description: Catch-all meter pending reconciliation.
-  unit: varies
+- name: cloud_subscription
+  description: Carbone Cloud monthly plan fee.
+  unit: month
   aggregation: sum
   dimensions:
   - account
-  - resource
+  - tier
+- name: on_prem_license
+  description: Carbone On-Prem annual license fee.
+  unit: year
+  aggregation: sum
+  dimensions:
+  - account
+  - tier
+- name: aws_pc_documents
+  description: Documents rendered on AWS Private Cloud (usage-based pricing).
+  unit: document
+  aggregation: sum
+  dimensions:
+  - account
+- name: documents_rendered
+  description: Total documents rendered (informational).
+  unit: document
+  aggregation: sum
+  dimensions:
+  - account
+  - template
+- name: data_injected
+  description: MB of JSON data injected (counted toward Cloud accounting).
+  unit: MB
+  aggregation: sum
+  dimensions:
+  - account
+  - template
 principles:
 - name: Visibility
-  description: Pull provider invoices or usage exports until a self-serve usage feed is documented.
+  description: Use Carbone account dashboard for Cloud usage; integrate AWS Cost Management for AWS PC; track on-prem renders via your own logs.
 - name: Allocation
-  description: Tag invoice line items to consuming business units in your FinOps store.
+  description: Use template IDs and per-team API keys to allocate cost; for AWS PC, tag the AWS account.
 - name: Optimization
-  description: Levers depend on the provider's billing model; review at renewal once reconciled.
+  description: Pick the right deployment track (Cloud vs On-Prem vs AWS PC); right-size Cloud tier; embed OSS engine for low-volume / no-egress workloads; use compact JSON to minimise per-MB accounting.
 - name: Accountability
-  description: Assign a contract owner to review billing against negotiated terms.
+  description: Assign template / API-key owners; review monthly Cloud usage and AWS PC invoice line items.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

@@ -5,7 +5,7 @@ provider: Carbone
 providerId: carbone
 created: '2026-05-08'
 modified: '2026-05-08'
-reconciled: false
+reconciled: true
 tags:
 - Document Generation
 - PDF
@@ -15,21 +15,51 @@ tags:
 - Rate Limiting
 - Quotas
 - Throttling
-description: Placeholder rate-limit artifact for Carbone. Replace with real limits once researched.
-notes: Initial scaffold — limits have not yet been reconciled.
+description: >-
+  Carbone Cloud documents have a default 60-second sync timeout and a 5-minute
+  async timeout (via webhooks). The rendered document URL is valid for one
+  hour or until first download. Cloud plans size their throughput by data
+  volume injected per render (documents are counted per 1 MB of injected
+  JSON data). On-prem deployments scale to provisioned host capacity.
+notes: >-
+  No managed-service per-second numeric quota is publicly documented; tier
+  caps reflect data-volume and bundled monthly throughput. The render-id
+  serves as an ephemeral single-use download token.
 sources:
-- https://carbone.io/
+- https://carbone.io/api-reference.html
+- https://carbone.io/pricing.html
 responseCodes:
   throttled: 429
+headers:
+- name: Authorization
+  description: Bearer token (Cloud) — required.
+- name: carbone-version
+  description: Recommend setting to 5 for new implementations.
 limits:
-- name: Default
+- name: Sync render timeout
+  scope: request
+  metric: seconds
+  limit: 60
+- name: Async render timeout
+  scope: request
+  metric: seconds
+  limit: 300
+  notes: Async via webhooks; result delivered when ready.
+- name: Render document availability
+  scope: render
+  metric: hours
+  limit: 1
+  notes: Or until first download.
+- name: Document accounting
   scope: account
-  metric: varies
-  limit: see provider documentation
-  notes: Pending reconciliation.
+  metric: per-1MB-injected-data
+  limit: see plan
+  notes: Each render counts based on size of injected JSON.
 policies:
 - name: Backoff Strategy
-  description: Clients should implement exponential backoff with jitter and honor any Retry-After header.
+  description: Honor 429 with exponential backoff; use async-with-webhook for long renders.
+- name: Single-use render-id
+  description: Render IDs are cryptographically random and act as a single-use password per generated document.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
