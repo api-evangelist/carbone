@@ -1,7 +1,7 @@
 aid: carbone
 url: https://raw.githubusercontent.com/api-evangelist/carbone/refs/heads/main/apis.yml
 name: Carbone
-x-type: company
+kind: company
 description: >-
   Carbone is a document generation engine that uses Word, Excel, PowerPoint
   and ODF templates with JSON data to produce PDFs or office documents. The
