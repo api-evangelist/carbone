@@ -8,7 +8,7 @@ description: >-
   Carbone HTTP API offers a template-then-render workflow with both cloud
   (api.carbone.io) and on-prem deployments. The Carbone JS rendering engine
   is open-source and embeddable.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - Document Generation
   - PDF
@@ -28,7 +28,7 @@ apis:
       then render with a template ID; or single-request inline-base64 render.
       Bearer-token auth (Authorization header). Sync and async via webhooks.
       Hosted on European providers (OVHCloud, Scaleway, BunnyCDN).
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://carbone.io/api-reference.html
     baseURL: https://api.carbone.io
     tags:
@@ -49,7 +49,7 @@ apis:
     description: >-
       Self-hosted Carbone deployment exposing the same HTTP API. Auth disabled
       by default; enable via configuration. 30-day free trial of paid features.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://carbone.io/documentation.html
     baseURL: http://<your-host>:4000
     tags:
@@ -65,7 +65,7 @@ apis:
       Open-source Node.js library that powers the rendering engine. Embed
       directly in your application; render templates with JSON data without
       hitting the cloud API.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://github.com/carboneio/carbone
     baseURL: npm:carbone
     tags:
