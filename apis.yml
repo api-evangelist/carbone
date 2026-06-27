@@ -42,7 +42,7 @@ apis:
         url: https://carbone.io/api-reference.html
       - type: Authentication
         url: https://carbone.io/api-reference.html#authentication
-      - type: SDK
+      - type: SDKs
         url: https://github.com/carboneio/carbone-sdk-js
   - aid: carbone:on-prem
     name: Carbone On-Premises
