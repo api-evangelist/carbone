@@ -1,0 +1,36 @@
+openapi: 3.1.0
+info:
+  title: Carbone Cloud HTTP Render Status API
+  description: Carbone is a document generation engine that uses Word, Excel, PowerPoint and ODF templates with JSON data to produce PDFs or office documents. The HTTP API offers a template-then-render workflow with bearer-token auth.
+  version: '4'
+  contact:
+    name: Carbone API
+    url: https://carbone.io/api-reference.html
+servers:
+- url: https://api.carbone.io
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Status
+paths:
+  /status:
+    get:
+      tags:
+      - Status
+      summary: Get API status
+      operationId: getStatus
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Carbone Cloud API token

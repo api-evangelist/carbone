@@ -1,0 +1,86 @@
+openapi: 3.1.0
+info:
+  title: Carbone Cloud HTTP Render Template API
+  description: Carbone is a document generation engine that uses Word, Excel, PowerPoint and ODF templates with JSON data to produce PDFs or office documents. The HTTP API offers a template-then-render workflow with bearer-token auth.
+  version: '4'
+  contact:
+    name: Carbone API
+    url: https://carbone.io/api-reference.html
+servers:
+- url: https://api.carbone.io
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Template
+paths:
+  /template:
+    post:
+      tags:
+      - Template
+      summary: Upload a template
+      operationId: uploadTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - template
+              properties:
+                template:
+                  type: string
+                  description: Base64-encoded template file
+                payload:
+                  type: string
+                  description: Optional payload for templateId hashing
+      responses:
+        '200':
+          description: Template uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      templateId:
+                        type: string
+  /template/{templateId}:
+    parameters:
+    - in: path
+      name: templateId
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Template
+      summary: Download a template
+      operationId: getTemplate
+      responses:
+        '200':
+          description: Template file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+    delete:
+      tags:
+      - Template
+      summary: Delete a template
+      operationId: deleteTemplate
+      responses:
+        '200':
+          description: Deleted
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Carbone Cloud API token
