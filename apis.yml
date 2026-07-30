@@ -8,7 +8,20 @@ description: >-
   Carbone HTTP API offers a template-then-render workflow with both cloud
   (api.carbone.io) and on-prem deployments. The Carbone JS rendering engine
   is open-source and embeddable.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: true
+  try_now: true
+  public: false
+  label: Freemium (free trial) · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/carbone.png
 tags:
   - Document Generation
   - PDF
@@ -21,62 +34,90 @@ created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.19'
 apis:
-  - aid: carbone:cloud
-    name: Carbone Cloud HTTP API
-    description: >-
-      Cloud-hosted Carbone API. Two flows — upload-once via POST /template
-      then render with a template ID; or single-request inline-base64 render.
-      Bearer-token auth (Authorization header). Sync and async via webhooks.
-      Hosted on European providers (OVHCloud, Scaleway, BunnyCDN).
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://carbone.io/api-reference.html
-    baseURL: https://api.carbone.io
-    tags:
-      - REST
-      - Templates
-      - Render
-      - Async
-      - Webhooks
-    properties:
-      - type: Documentation
-        url: https://carbone.io/api-reference.html
-      - type: Authentication
-        url: https://carbone.io/api-reference.html#authentication
-      - type: SDKs
-        url: https://github.com/carboneio/carbone-sdk-js
-  - aid: carbone:on-prem
-    name: Carbone On-Premises
-    description: >-
-      Self-hosted Carbone deployment exposing the same HTTP API. Auth disabled
-      by default; enable via configuration. 30-day free trial of paid features.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://carbone.io/documentation.html
-    baseURL: http://<your-host>:4000
-    tags:
-      - REST
-      - Self-Hosted
-      - On-Prem
-    properties:
-      - type: Documentation
-        url: https://carbone.io/documentation.html
-  - aid: carbone:js
-    name: Carbone Render Engine (Open Source)
-    description: >-
-      Open-source Node.js library that powers the rendering engine. Embed
-      directly in your application; render templates with JSON data without
-      hitting the cloud API.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://github.com/carboneio/carbone
-    baseURL: npm:carbone
-    tags:
-      - SDK
-      - Open Source
-      - Node.js
-    properties:
-      - type: SourceCode
-        url: https://github.com/carboneio/carbone
-      - type: Documentation
-        url: https://carbone.io/documentation.html
+- aid: carbone:cloud
+  name: Carbone Cloud HTTP API
+  description: >-
+    Cloud-hosted Carbone API. Two flows — upload-once via POST /template then render with a template ID;
+    or single-request inline-base64 render. Bearer-token auth (Authorization header). Sync and async via
+    webhooks. Hosted on European providers (OVHCloud, Scaleway, BunnyCDN).
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://carbone.io/api-reference.html
+  baseURL: https://api.carbone.io
+  tags:
+  - REST
+  - Templates
+  - Render
+  - Async
+  - Webhooks
+  properties:
+  - type: Documentation
+    url: https://carbone.io/api-reference.html
+  - type: Authentication
+    url: https://carbone.io/api-reference.html#authentication
+  - type: SDKs
+    url: https://github.com/carboneio/carbone-sdk-js
+- aid: carbone:on-prem
+  name: Carbone On-Premises
+  description: >-
+    Self-hosted Carbone deployment exposing the same HTTP API. Auth disabled by default; enable via configuration.
+    30-day free trial of paid features.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://carbone.io/documentation.html
+  baseURL: http://<your-host>:4000
+  tags:
+  - REST
+  - Self-Hosted
+  - On-Prem
+  properties:
+  - type: Documentation
+    url: https://carbone.io/documentation.html
+- aid: carbone:js
+  name: Carbone Render Engine (Open Source)
+  description: >-
+    Open-source Node.js library that powers the rendering engine. Embed directly in your application;
+    render templates with JSON data without hitting the cloud API.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://github.com/carboneio/carbone
+  baseURL: npm:carbone
+  tags:
+  - SDK
+  - Open Source
+  - Node.js
+  properties:
+  - type: SourceCode
+    url: https://github.com/carboneio/carbone
+  - type: Documentation
+    url: https://carbone.io/documentation.html
+- aid: carbone:carbone-render-api
+  name: Carbone Render API
+  description: The Render API from Carbone — 3 operation(s) for render.
+  humanURL: https://carbone.io/api-reference.html
+  baseURL: https://api.carbone.io
+  tags:
+  - Render
+  properties:
+  - type: OpenAPI
+    url: openapi/carbone-render-api-openapi.yml
+- aid: carbone:carbone-status-api
+  name: Carbone Status API
+  description: The Status API from Carbone — 1 operation(s) for status.
+  humanURL: https://carbone.io/api-reference.html
+  baseURL: https://api.carbone.io
+  tags:
+  - Status
+  properties:
+  - type: OpenAPI
+    url: openapi/carbone-status-api-openapi.yml
+- aid: carbone:carbone-template-api
+  name: Carbone Template API
+  description: The Template API from Carbone — 2 operation(s) for template.
+  humanURL: https://carbone.io/api-reference.html
+  baseURL: https://api.carbone.io
+  tags:
+  - Template
+  properties:
+  - type: OpenAPI
+    url: openapi/carbone-template-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/carbone-agentic-access.yml
