@@ -1,0 +1,18 @@
+{
+  "provider": "carbone",
+  "sources": [
+    "carbone-render-api-openapi.yml",
+    "carbone-status-api-openapi.yml",
+    "carbone-template-api-openapi.yml"
+  ],
+  "outputs": [
+    "carbone-render-api-openapi.yml",
+    "carbone-status-api-openapi.yml",
+    "carbone-template-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
