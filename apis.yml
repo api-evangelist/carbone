@@ -119,6 +119,10 @@ apis:
   - type: OpenAPI
     url: openapi/carbone-template-api-openapi.yml
 common:
+  - type: IssueTracker
+    url: https://github.com/carboneio/carbone/issues
+  - type: SecurityPolicy
+    url: https://github.com/carboneio/carbone/blob/master/SECURITY.md
   - type: AgenticAccess
     url: agentic-access/carbone-agentic-access.yml
   - type: DomainSecurity
