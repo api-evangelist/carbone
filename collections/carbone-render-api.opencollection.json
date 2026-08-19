@@ -1,0 +1,96 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Carbone Cloud HTTP Render API",
+    "version": "4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Render",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Render a document from a stored template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.carbone.io/render/:templateId",
+            "headers": [
+              {
+                "name": "carbone-version",
+                "value": ""
+              },
+              {
+                "name": "carbone-webhook-url",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Render a document from a stored template"
+        },
+        {
+          "info": {
+            "name": "Inline template-and-render in a single call",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.carbone.io/render/template",
+            "params": [
+              {
+                "name": "download",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Inline template-and-render in a single call"
+        },
+        {
+          "info": {
+            "name": "Download a rendered document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.carbone.io/render/:renderId",
+            "params": [
+              {
+                "name": "renderId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Download a rendered document"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
