@@ -26,6 +26,14 @@ tags:
   - Document Generation
   - PDF
   - Templates
+  - Open-Source
+  - Office
+  - DOCX
+  - XLSX
+tags_raw:
+  - Document Generation
+  - PDF
+  - Templates
   - Open Source
   - Office
   - DOCX
@@ -44,6 +52,12 @@ apis:
   humanURL: https://carbone.io/api-reference.html
   baseURL: https://api.carbone.io
   tags:
+  - REST
+  - Templates
+  - Render
+  - Async
+  - Webhook
+  tags_raw:
   - REST
   - Templates
   - Render
@@ -80,6 +94,10 @@ apis:
   humanURL: https://github.com/carboneio/carbone
   baseURL: npm:carbone
   tags:
+  - SDK
+  - Open-Source
+  - Node.js
+  tags_raw:
   - SDK
   - Open Source
   - Node.js
