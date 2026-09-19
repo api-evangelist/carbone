@@ -146,6 +146,8 @@ apis:
   humanURL: https://carbone.io/api-reference.html
   baseURL: https://api.carbone.io
   tags:
+  - Templates
+  tags_raw:
   - Template
   properties:
   - type: OpenAPI
