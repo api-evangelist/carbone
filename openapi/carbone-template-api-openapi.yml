@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Carbone Cloud HTTP Render Template API
+  title: Carbone Cloud HTTP Template API
   description: Carbone is a document generation engine that uses Word, Excel, PowerPoint and ODF templates with JSON data to produce PDFs or office documents. The HTTP API offers a template-then-render workflow with bearer-token auth.
   version: '4'
   contact:
