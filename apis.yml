@@ -10,6 +10,10 @@ description: >-
   is open-source and embeddable.
 deliveryModel:
   model: unknown
+  license_evidence:
+    repo: carboneio/carbone
+    spdx: NOASSERTION
+    stars: 2118
   open_source: unknown
   commercial: true
   callable_host: true
@@ -19,7 +23,7 @@ deliveryModel:
   - openapi
   - pricing
   - repository-unlicensed
-  generated: '2026-08-28'
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: freemium
@@ -40,7 +44,7 @@ tags:
   - Document Generation
   - PDF
   - Templates
-  - Open-Source
+  - Open Source
   - Office
   - DOCX
   - XLSX
@@ -52,6 +56,7 @@ tags_raw:
   - Office
   - DOCX
   - XLSX
+  - Open-Source
 created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.23'
@@ -109,12 +114,13 @@ apis:
   baseURL: npm:carbone
   tags:
   - SDK
-  - Open-Source
+  - Open Source
   - Node.js
   tags_raw:
   - SDK
   - Open Source
   - Node.js
+  - Open-Source
   properties:
   - type: SourceCode
     url: https://github.com/carboneio/carbone
