@@ -242,3 +242,103 @@ plans:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  - seat
+  - subscription
+  units:
+  - object
+  - period
+  - seat
+  plans:
+  - name: Cloud — Free
+    access: free
+    model: subscription
+    model_how: derived
+    units:
+    - period
+    periods:
+    - month
+  - name: Cloud — Essential
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - period
+    periods:
+    - month
+  - name: Cloud — Essential Plus
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - period
+    periods:
+    - month
+  - name: Cloud — Advanced
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - period
+    periods:
+    - month
+  - name: Cloud — Advanced Plus
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - period
+    periods:
+    - month
+  - name: Cloud — Advanced Ultra
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - period
+    periods:
+    - month
+  - name: On-Prem — Free
+    access: free
+    model: subscription
+    model_how: derived
+    units:
+    - period
+    periods:
+    - year
+  - name: On-Prem — Fit
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - period
+    periods:
+    - year
+  - name: On-Prem — Unlimited
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - period
+    periods:
+    - year
+  - name: AWS Private Cloud (usage-based)
+    access: other
+    model: metered
+    model_how: stated
+    units:
+    - object
+    periods:
+    - month
+  - name: Carbone Render (Open Source)
+    access: free
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - one-time
