@@ -1,0 +1,207 @@
+openapi: 3.1.0
+info:
+  title: Carbone Cloud HTTP API
+  description: >-
+    Carbone is a document generation engine that uses Word, Excel, PowerPoint
+    and ODF templates with JSON data to produce PDFs or office documents. The
+    HTTP API offers a template-then-render workflow with bearer-token auth.
+  version: "4"
+  contact:
+    name: Carbone API
+    url: https://carbone.io/api-reference.html
+servers:
+  - url: https://api.carbone.io
+    description: Production
+security:
+  - bearerAuth: []
+tags:
+  - name: Template
+  - name: Render
+  - name: Status
+paths:
+  /template:
+    post:
+      tags: [Template]
+      summary: Upload a template
+      operationId: uploadTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [template]
+              properties:
+                template:
+                  type: string
+                  description: Base64-encoded template file
+                payload:
+                  type: string
+                  description: Optional payload for templateId hashing
+      responses:
+        '200':
+          description: Template uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      templateId:
+                        type: string
+  /template/{templateId}:
+    parameters:
+      - in: path
+        name: templateId
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Template]
+      summary: Download a template
+      operationId: getTemplate
+      responses:
+        '200':
+          description: Template file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+    delete:
+      tags: [Template]
+      summary: Delete a template
+      operationId: deleteTemplate
+      responses:
+        '200':
+          description: Deleted
+  /render/{templateId}:
+    parameters:
+      - in: path
+        name: templateId
+        required: true
+        schema:
+          type: string
+    post:
+      tags: [Render]
+      summary: Render a document from a stored template
+      operationId: renderTemplate
+      parameters:
+        - in: header
+          name: carbone-version
+          required: false
+          schema:
+            type: string
+        - in: header
+          name: carbone-webhook-url
+          required: false
+          schema:
+            type: string
+            format: uri
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                convertTo:
+                  type: string
+                  example: pdf
+                reportName:
+                  type: string
+                lang:
+                  type: string
+      responses:
+        '200':
+          description: Render initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      renderId:
+                        type: string
+  /render/template:
+    post:
+      tags: [Render]
+      summary: Inline template-and-render in a single call
+      operationId: renderInline
+      parameters:
+        - in: query
+          name: download
+          schema:
+            type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [template, data]
+              properties:
+                template:
+                  type: string
+                  description: Base64-encoded template
+                data:
+                  type: object
+                convertTo:
+                  type: string
+      responses:
+        '200':
+          description: Rendered file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /render/{renderId}:
+    parameters:
+      - in: path
+        name: renderId
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Render]
+      summary: Download a rendered document
+      operationId: downloadRender
+      security: []
+      responses:
+        '200':
+          description: Rendered file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /status:
+    get:
+      tags: [Status]
+      summary: Get API status
+      operationId: getStatus
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Carbone Cloud API token

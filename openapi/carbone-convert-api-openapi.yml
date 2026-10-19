@@ -1,0 +1,1262 @@
+openapi: 3.2.0
+info:
+  description: 'Carbone Open API reference.
+
+
+    Carbone is a document generation and conversion API, trusted by thousands of companies across finance, legal, healthcare, HR, e-commerce, and government to automate their document workflows at scale.
+
+
+    The core idea is simple: design a template (DOCX, XLSX, PPTX, ODT, HTML, Markdown, and more), provide a JSON dataset, and Carbone automatically merges them to produce a ready-to-use document: PDF, Word, Excel, Markdown, HTML, CSV, or any other supported format. Common use cases include:
+
+    - **Finance and Accounting**: Invoices, purchase orders, financial reports, tax statements, bank statements, and audit reports.
+
+    - **Legal**: Contracts, NDAs, legal agreements, court filings, and case summaries.
+
+    - **Healthcare**: Patient records, medical reports, prescriptions, discharge summaries, and insurance claim forms.
+
+    - **Government and Public Sector**: Administrative forms, public service notices, permits, official certificates, identity documents, tax declarations, and compliance reports.
+
+    - **Human Resources**: Employment contracts, onboarding packs, payslips, performance reviews, and internal communications.
+
+    - **Retail and E-commerce**: Receipts, shipping labels, delivery notes, product catalogues, and promotional materials.
+
+    - **Education**: Diplomas, certificates, transcripts, report cards, and admission letters.
+
+    - **Insurance**: Policy documents, claim reports, renewal notices, and coverage summaries.
+
+    - **Real Estate**: Lease agreements, property reports, sale contracts, and inspection certificates.
+
+    - **Logistics and Supply Chain**: Packing lists, bills of lading, customs declarations, and delivery confirmations.
+
+    - **SaaS and Technology**: Usage reports, audit logs, billing statements, and client-facing data exports.
+
+
+    Carbone provides the fastest **document converter**:
+
+    - **Office to PDF** - Convert DOCX, XLSX, PPTX, ODT, ODS, ODP, and ODG files to PDF.
+
+    - **HTML to PDF** - Convert raw HTML pages or web-based content to pixel perfect PDF.
+
+    - **HTML to Images** - Convert raw HTML pages or web-based content to PNG, JPG, or WEBP.
+
+    - **PDF to Office** - Convert PDF to DOCX, ODT, HTML, TXT (plain text extraction).
+
+    - **PDF to Image** - Convert PDF to PNG, JPG, or WEBP.
+
+    - **Office to Office** - DOCX ↔ ODT, XLSX ↔ CSV ↔ ODS, PPTX ↔ ODP.
+
+    - **Office to Image** - Convert DOCX / PPTX / XLSX to PNG, JPG, TIFF, SVG, WEBP.
+
+    - **Office to MD** - Convert DOCX/ODT to Markdown.
+
+    - **MD to PDF, Office, or Images** - Convert Markdown documents to PDF, DOCX, ODT, PNG or JPG.
+
+    - **PDF processing** - Apply password protection, watermarks, compliance settings, and more to any existing PDF.
+
+    - **Any supported format to any other supported format** - Spreadsheets, presentations, graphics, and more (see the full conversion matrix).
+
+
+    To get started:
+
+    - **Carbone Cloud API**: find your API key on your Carbone account. Home page > Copy the `production` or `test` API key.
+
+    - **Carbone Docker**: Update the `servers.url` field on the Open API specification.
+
+    - **Carbone On-premise**: Update the `servers.url` field on the Open API specification.
+
+    - **Carbone On-AWS**: Update the `servers.url` field on the Open API specification.
+
+
+    Documentation:
+
+    - Authentication
+
+    - API Flow
+
+    - API Timeout
+
+    - API Webhooks
+
+    - API Versions
+
+    - Template Storage
+
+    - Document Storage
+
+    - SDKs: Node, Javascript, Golang, PHP, Python, Rust, and Java.
+
+    - Integrations: Bubble, Make, Zapier, N8N, Odoo, Salesforce and Hubspot (Coming soon)'
+  version: V5.15.0
+  title: Carbone Convert API
+  contact:
+    name: Carbone Support
+    email: support@carbone.io
+    url: https://help.carbone.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://api.carbone.io
+tags:
+- name: Convert
+  description: Convert Documents
+paths:
+  /render/template:
+    post:
+      summary: Convert a document
+      description: 'Convert your documents to 100+ formats, including PDF, ODT, DOCX, JPG, PNG, Markdown, CSV, ODS, XLSX, CSV, ODP, PPTX, XML, HTML, TXT, IDML, and many more. See the full conversion matrix for all supported input/output format combinations.
+
+
+        **Two workflows are available for document conversion**:
+
+        1. **Inline (base64)** – Send the document as a base64-encoded string in the request body field named "template". Use the special endpoint `POST /render/template?download=true`. No prior upload is needed.
+
+        2. **Pre-uploaded template** – Upload the document once with `POST /template`, then convert it on demand using its `templateId` or `versionId` via `POST /render/{templateId-or-versionId}?download=true`.
+
+
+        **Converters**: set the `converter` field to `L` (LibreOffice, default), `O` (OnlyOffice), `C` (Chromium) or `I` (Carbone ICE). See the `converter` field below and the converters documentation.
+
+
+        **Notes**:
+
+        - Set the `download` query parameter to `true` to receive the converted file as a direct stream, or `false` (default) to receive a `renderId` for a separate `GET /render/{renderId}` download call.
+
+        - For large files, set the `carbone-webhook-url` header: Carbone processes the conversion in the background and POSTs the result to your server when done.'
+      externalDocs:
+        url: https://carbone.io/documentation/developer/http-api/convert-reports.html
+      security:
+      - bearerAuth: []
+      tags:
+      - Convert
+      parameters:
+      - $ref: '#/components/parameters/carboneVersion'
+      - $ref: '#/components/parameters/carboneWebhookUrl'
+      - $ref: '#/components/parameters/carboneWebhookHeaderAuthorization'
+      - $ref: '#/components/parameters/carboneEgressHeaderAuthorization'
+      - name: download
+        in: query
+        required: false
+        description: 'Controls how the document is returned.
+
+          - `true`: returns the document directly as a file stream (the `Content-Type` reflects the output format). The file is not stored on Carbone servers and no `renderId` is issued, so there is no need to call `GET /render/{renderId}`.
+
+          - `false`: returns a JSON object with a `renderId`; use `GET /render/{renderId}` to download the file in a second call.
+
+          '
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvertInlineRequestBody'
+            examples:
+              html_to_pdf_chromium:
+                summary: HTML → PDF (Chromium)
+                description: Best for HTML/CSS/JS content. Chromium renders with full browser fidelity.
+                value:
+                  template: PCFET0NUWVBFIGh0bWw+...
+                  convertTo: pdf
+                  converter: C
+              html_to_png_chromium:
+                summary: HTML → PNG (Chromium)
+                description: Render an HTML page as an image. Useful for social share cards, previews, or web-based snapshots. Also works with `jpg` and `webp`.
+                value:
+                  template: PCFET0NUWVBFIGh0bWw+...
+                  convertTo: png
+                  converter: C
+              docx_to_pdf:
+                summary: DOCX → PDF (LibreOffice)
+                description: Convert a Word document to PDF.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: pdf
+                  converter: L
+              docx_to_pdf_ice:
+                summary: DOCX → PDF (Carbone ICE)
+                description: 'Fastest DOCX to PDF conversion, 3x to 300x faster than LibreOffice, OnlyOffice, or MS Word. Carbone draws the PDF itself. Only the Security and Watermark PDF options are supported. See limitations: https://carbone.io/documentation/developer/http-api/generate-reports.html#converters-carbone-ice-limitations'
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: pdf
+                  converter: I
+              xlsx_to_pdf:
+                summary: XLSX → PDF (LibreOffice)
+                description: Convert an Excel spreadsheet to PDF.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: pdf
+                  converter: L
+              pptx_to_pdf:
+                summary: PPTX → PDF (LibreOffice)
+                description: Convert a PowerPoint presentation to PDF.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: pdf
+                  converter: L
+              odt_to_pdf:
+                summary: ODT → PDF (LibreOffice)
+                description: Convert an OpenDocument Text file to PDF.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: pdf
+                  converter: L
+              xlsx_to_csv:
+                summary: XLSX → CSV
+                description: Extract spreadsheet data as a CSV file.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: csv
+              docx_to_html:
+                summary: DOCX → HTML
+                description: Convert a Word document to HTML for web display.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: html
+              pptx_to_png:
+                summary: PPTX → PNG
+                description: Render the first slide of a PowerPoint presentation as a PNG image.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: png
+              html_to_pdf_password:
+                summary: HTML → Password-protected PDF
+                description: Convert HTML to an encrypted PDF using advanced formatOptions.
+                value:
+                  template: PCFET0NUWVBFIGh0bWw+...
+                  convertTo:
+                    formatName: pdf
+                    formatOptions:
+                      EncryptFile: true
+                      DocumentOpenPassword: s3cr3t
+                  converter: C
+              docx_to_pdf_onlyoffice:
+                summary: DOCX → PDF (OnlyOffice)
+                description: Use OnlyOffice for maximum fidelity with complex DOCX/XLSX/PPTX formatting.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: pdf
+                  converter: O
+              md_to_docx:
+                summary: MD → DOCX (LibreOffice)
+                description: Convert a Markdown file to a Word document.
+                value:
+                  template: IyBIZWxsbyBXb3JsZA...
+                  convertTo: docx
+                  converter: L
+              md_to_odt:
+                summary: MD → ODT (LibreOffice)
+                description: Convert a Markdown file to an OpenDocument Text file.
+                value:
+                  template: IyBIZWxsbyBXb3JsZA...
+                  convertTo: odt
+                  converter: L
+              md_to_pdf:
+                summary: MD → PDF (LibreOffice)
+                description: Convert a Markdown file to PDF.
+                value:
+                  template: IyBIZWxsbyBXb3JsZA...
+                  convertTo: pdf
+                  converter: L
+              md_to_jpeg:
+                summary: MD → JPEG (LibreOffice)
+                description: Convert a Markdown file to a JPEG image.
+                value:
+                  template: IyBIZWxsbyBXb3JsZA...
+                  convertTo: jpg
+                  converter: L
+              md_to_png:
+                summary: MD → PNG (LibreOffice)
+                description: Convert a Markdown file to a PNG image.
+                value:
+                  template: IyBIZWxsbyBXb3JsZA...
+                  convertTo: png
+                  converter: L
+              odt_to_md:
+                summary: ODT → MD (LibreOffice)
+                description: Convert an OpenDocument Text file to Markdown.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: md
+                  converter: L
+              docx_to_md:
+                summary: DOCX → MD (LibreOffice)
+                description: Convert a Word document to Markdown.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: md
+                  converter: L
+              pdf_to_pdf_password:
+                summary: PDF → Password-protected PDF
+                description: Add a password to an existing PDF using LibreOffice. The output PDF can only be opened with the specified password.
+                value:
+                  template: JVBERi0xLjQKJcfs...
+                  convertTo:
+                    formatName: pdf
+                    formatOptions:
+                      EncryptFile: true
+                      DocumentOpenPassword: s3cr3t
+                  converter: L
+              pdf_to_pdfa_pdfua:
+                summary: PDF → PDF/A-4 and PDF/UA (LibreOffice)
+                description: Re-export an existing PDF as PDF/A-4 with PDF/UA accessibility tags.
+                value:
+                  template: JVBERi0xLjQKJcfs...
+                  hardRefresh: true
+                  convertTo:
+                    formatName: pdf
+                    formatOptions:
+                      SelectPdfVersion: 4
+                      PDFUACompliance: true
+                      UseTaggedPDF: true
+                  converter: L
+              pdf_to_png:
+                summary: PDF → PNG
+                description: Render a PDF as an image, for thumbnails or previews. Also works with `jpg` and `webp`.
+                value:
+                  template: JVBERi0xLjQKJcfs...
+                  convertTo: png
+              pptx_to_webp:
+                summary: PPTX → WEBP
+                description: Render the first slide of a PowerPoint presentation as a WEBP image. Useful for generating slide thumbnails.
+                value:
+                  template: UEsDBBQABgAIAAAAIQ...
+                  convertTo: webp
+      responses:
+        '200':
+          $ref: '#/components/responses/RenderSuccess'
+        '400':
+          $ref: '#/components/responses/ConvertBadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundError'
+        '413':
+          description: The JSON body or the base64 document exceeds the size limit.
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                jsonTooLarge:
+                  summary: The JSON body exceeds the size limit.
+                  value:
+                    success: false
+                    error: Content too large, the JSON size limit is X Bytes
+                    code: w121
+                templateTooLarge:
+                  summary: The base64 `template` exceeds the template size limit.
+                  value:
+                    success: false
+                    error: Template too large, the file size limit is X Bytes
+                    code: w119
+        '415':
+          $ref: '#/components/responses/TemplateFormatError'
+        '422':
+          $ref: '#/components/responses/MissingDataFieldError'
+        '500':
+          $ref: '#/components/responses/GenerateReportError'
+      operationId: postRenderTemplate
+      x-operation-id-source: derived
+components:
+  parameters:
+    carboneWebhookUrl:
+      name: carbone-webhook-url
+      description: 'URL that Carbone calls (HTTP POST) when an asynchronous render or conversion finishes. Providing it enables asynchronous mode, which raises the rendering timeout to 5 minutes.
+
+        '
+      in: header
+      required: false
+      schema:
+        type: string
+        example: https://my-server.com/carbone-webhook
+    carboneWebhookHeaderAuthorization:
+      name: carbone-webhook-header-authorization
+      description: 'Custom header forwarded on the webhook call only. It follows the `carbone-webhook-header-<name>` pattern, where any header `<name>` can be sent to your webhook (`authorization` is the most common).
+
+        For the `authorization` header, this overrides `carbone-egress-header-authorization` for webhook calls.
+
+        '
+      in: header
+      required: false
+      schema:
+        type: string
+    carboneVersion:
+      name: carbone-version
+      description: 'Carbone API major version to use. Only a major version can be specified: it automatically includes all future minor versions and patches.
+
+        - `5`: latest version, recommended.
+
+        - `4`: default when the header is not provided.
+
+        - `3`: legacy.
+
+        - `staging`: not intended for production environments.
+
+
+        It is strongly recommended to always set this header explicitly to avoid unexpected behavior.
+
+        [See API versioning documentation](https://carbone.io/documentation/developer/http-api/introduction.html#api-version)
+
+        '
+      in: header
+      required: true
+      schema:
+        type: string
+        enum:
+        - '5'
+        - '4'
+        - '3'
+        - staging
+        default: '5'
+    carboneEgressHeaderAuthorization:
+      name: carbone-egress-header-authorization
+      description: 'Sets the `authorization` header Carbone sends on all egress traffic for this render: webhook calls, dynamic image URLs, and files fetched by `appendFile`.
+
+        Example: `carbone-egress-header-authorization: my-secret` makes Carbone send `authorization: my-secret` on each outbound request.
+
+        Only the `authorization` header can be customized, and the value must be shorter than 512 characters.
+
+        For webhook calls, `carbone-webhook-header-authorization` overrides this value (webhook only).
+
+        '
+      in: header
+      required: false
+      schema:
+        type: string
+        maxLength: 511
+  schemas:
+    Converter:
+      type: string
+      enum:
+      - L
+      - O
+      - C
+      - I
+      default: L
+      example: L
+      description: 'Converter engine to use when a document format change is required (not only when `convertTo` is `"pdf"`). If omitted, LibreOffice (`L`) is used.
+
+        See https://carbone.io/documentation/developer/http-api/generate-reports.html#converters
+
+        - `L` **LibreOffice** (default): DOCX, XLSX, PPTX, ODT, ODS, ODP, ODG, MD, PDF. Best balance between performance and document compatibility, and the only converter supporting all PDF options.
+
+        - `O` **OnlyOffice**: DOCX, XLSX, PPTX to PDF. Alternative for office documents. Only the Security and Watermark PDF options are supported. From v5.15.0, Carbone ICE is recommended instead of OnlyOffice for DOCX to PDF.
+
+        - `C` **Chromium**: HTML to PDF, JPG, PNG, WEBP. High-fidelity HTML conversion with full CSS and JavaScript support. Only the Security and Watermark PDF options are supported. 100 MB maximum document size.
+
+        - `I` **Carbone ICE** (Instant Converter Engine): DOCX, ODT to PDF. The fastest converter, 3x to 300x faster than LibreOffice, OnlyOffice, or MS Word: Carbone draws the PDF itself, with no office suite involved. Only the Security and Watermark PDF options are supported. ODT to PDF is in beta. It can also be enabled per template with the `{o.converter=I}` tag. See limitations: https://carbone.io/documentation/developer/http-api/generate-reports.html#converters-carbone-ice-limitations
+
+        '
+    ConvertInlineRequestBody:
+      type: object
+      required:
+      - template
+      properties:
+        template:
+          type: string
+          description: '**Required for inline conversion.** The source document encoded as a base64 string.
+
+            Supported input formats: DOCX, DOC, XLSX, XLS, PPTX, PPT, PDF, ODT, ODS, ODP, ODG, RTF, TXT, CSV, HTML, XHTML, MD (Markdown), IDML, XML.
+
+            '
+          example: PCFET0NUWVBFIGh0bWw+...
+        data:
+          oneOf:
+          - type: object
+          - type: array
+            items: {}
+          example: {}
+          description: 'Optional (from `carbone-version: 5`). JSON data-set merged into the document using `{d.}` tags.
+
+            Omit `data` for a pure conversion: Carbone skips templating and leaves tags unchanged.
+
+            Pass `{}` to run templating with an empty data-set (tags resolve to empty).
+
+            '
+        convertTo:
+          $ref: '#/components/schemas/ConvertToOption'
+        converter:
+          $ref: '#/components/schemas/Converter'
+        timezone:
+          type: string
+          example: Europe/Paris
+          description: 'Convert document dates to a timezone. The date must be chained with the `:formatD` formatter. List of accepted timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'
+        lang:
+          type: string
+          example: fr-fr
+          description: 'Locale of the generated document, used for translations `{t()}`, number formatting `:formatN`, and currencies `:formatC`. List of supported locales: https://github.com/carboneio/carbone/blob/master/formatters/_locale.js'
+        complement:
+          type: object
+          example: {}
+          description: Extra data accessible in the template with `{c.}` instead of `{d.}`.
+        variableStr:
+          type: string
+          example: '{#def = d.id}'
+          description: 'Predefined alias. See: https://carbone.io/documentation/design/substitutions/aliases.html#alias'
+        reportName:
+          type: string
+          example: '{d.date}'
+          description: Static or dynamic output file name returned in the `content-disposition` header. The output extension is appended automatically, so do not include it. Supports multiple Carbone tags, e.g. `{d.type}-{d.date}`.
+        enum:
+          type: object
+          example: {}
+          description: 'List of enumerations for use with the `convEnum` formatter. See: https://carbone.io/documentation/design/advanced-features/key-value-mapping.html#convenum-type'
+        translations:
+          type: object
+          example:
+            fr:
+              one: un
+            es:
+              one: uno
+          description: Localization dictionary used with `{t( )}` tags. Requires the `lang` option.
+        currencySource:
+          type: string
+          example: EUR
+          description: Source currency from your JSON data, used by `formatC` for currency conversion.
+        currencyTarget:
+          type: string
+          example: USD
+          description: Target currency for the generated document, used by `formatC`.
+        currencyRates:
+          type: object
+          example:
+            EUR: 1
+            USD: 1.2
+          description: Currency exchange rates for `formatC` conversion.
+        hardRefresh:
+          type: boolean
+          example: false
+          description: If true, recomputes pagination and table of contents at the end of rendering. Requires `convertTo` to be defined.
+        batchSplitBy:
+          type: string
+          description: 'Optional - Generate multiple reports with one template and an array of data, one report per object. `"d"` when `data` is itself an array of objects, or `"d.myArray"` to select a direct child array of `data`.
+
+            Requires the `carbone-webhook-url` header (asynchronous mode) and a non-empty array of at most 100 objects on Carbone Cloud. Learn more: https://carbone.io/documentation/developer/http-api/generate-reports.html#batch-processing
+
+            '
+          example: d.items
+        batchOutput:
+          type: string
+          enum:
+          - zip
+          - pdf
+          default: zip
+          description: Optional (v5+) - Output file type for batch processing. `zip` (default) returns an archive of all the reports. `pdf` returns a concatenation of the generated PDFs, and requires `convertTo` to be `pdf`.
+          example: zip
+        batchReportName:
+          type: string
+          description: Optional - Name of each file inside the ZIP batch export, Carbone tags accepted (e.g. `report-{d.id}`). Ignored when `batchOutput` is `pdf`. Used together with `batchSplitBy`. From v5.14.0, an index is appended to every file (`report_1.pdf`, `report_2.pdf`) as soon as the first two reports resolve to the same name.
+          example: report-{d.id}
+        preReleaseFeatureIn:
+          type: integer
+          example: 5000000
+          description: 'Optional - Pre-release feature level for this render only. Only features and fixes introduced up to the given tag are applied, higher tags stay disabled. Learn more: https://carbone.io/documentation/design/overview/version-lifecycle.html#pre-release-features'
+        failOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - IMAGE_URL_ERROR
+          example:
+          - IMAGE_URL_ERROR
+          description: 'Optional (v5.15.0+). Array of conditions that stop the render and return an error. `IMAGE_URL_ERROR`: an image that cannot be downloaded from its URL stops the report. Learn more: https://carbone.io/documentation/developer/http-api/generate-reports.html#fail-on'
+    ConvertToOption:
+      description: "Output format for the converted/generated document.\nCan be a simple string (format name) or an object with advanced options (PDF password, watermark, image quality, CSV separator, etc.).\n\n**Simple string examples:** `\"pdf\"`, `\"docx\"`, `\"xlsx\"`, `\"pptx\"`, `\"odt\"`, `\"ods\"`, `\"odp\"`, `\"html\"`, `\"csv\"`, `\"txt\"`, `\"png\"`, `\"jpg\"`, `\"svg\"`, `\"epub\"`, `\"md\"`, `\"webp\"`\n\n**Full conversion matrix:** https://carbone.io/documentation/developer/http-api/generate-reports.html#output-file-type\n\n**Object form (PDF with options):**\n```json\n    {\n      \"formatName\": \"pdf\",\n      \"formatOptions\": {\n        \"EncryptFile\": true,\n        \"DocumentOpenPassword\": \"s3cr3t\",\n        \"Watermark\": \"CONFIDENTIAL\"\n      }\n    }\n```\n\n**Object form (PDF with multiple watermarks):**\n```json\n    {\n      \"formatName\": \"pdf\",\n      \"formatOptions\": {\n        \"Watermarks\": [\n          {\n            \"text\": \"Confidential - Page {#PAGE_NUMBER} / {#PAGE_TOTAL}\",\n            \"anchor\": \"center\",\n            \"rotation\": -45,\n            \"opacity\": 0.1\n          }\n        ]\n      }\n    }\n```\n\n**Object form (JPG with options):**\n```json\n    {\n      \"formatName\": \"jpg\",\n      \"formatOptions\": { \"Quality\": 80, \"ColorMode\": 0 }\n    }\n```\n\n**Object form (CSV with options):**\n```json\n    {\n      \"formatName\": \"csv\",\n      \"formatOptions\": { \"fieldSeparator\": \";\", \"textDelimiter\": \"\\\"\", \"characterSet\": \"76\" }\n    }\n```\n"
+      oneOf:
+      - type: string
+        example: pdf
+        description: Target format name (e.g. pdf, docx, xlsx, pptx, odt, ods, html, csv, png, jpg, svg, epub, md, webp…)
+      - type: object
+        description: Target format with advanced options.
+        required:
+        - formatName
+        properties:
+          formatName:
+            type: string
+            description: Target format name.
+            example: pdf
+          formatOptions:
+            type: object
+            description: 'Format-specific options. See the full option list for each format:
+
+              - PDF: https://carbone.io/documentation/developer/http-api/generate-reports.html#pdf-options
+
+              - JPG/PNG: https://carbone.io/documentation/developer/http-api/generate-reports.html#jpg-png-options
+
+              - CSV: https://carbone.io/documentation/developer/http-api/generate-reports.html#csv-options
+
+              - Watermarks: https://carbone.io/documentation/developer/http-api/generate-reports.html#watermark-options
+
+
+              PDF options availability varies by converter: LibreOffice (`L`) supports all of them, Chromium (`C`), OnlyOffice (`O`) and Carbone ICE (`I`) only the Security and Watermark options.
+
+              '
+            properties:
+              SelectPdfVersion:
+                type: integer
+                default: 0
+                enum:
+                - 0
+                - 1
+                - 2
+                - 3
+                - 4
+                - 15
+                - 16
+                - 17
+                - 20
+                description: 'PDF version to emit. 0: PDF 1.6 Standard. 1: PDF/A-1 (ISO 19005-1:2005). 2: PDF/A-2 (ISO 19005-2:2011). 3: PDF/A-3 (ISO 19005-3:2012). 4: PDF/A-4 (ISO 19005-4). 15: PDF 1.5 Standard. 16: PDF 1.6 Standard. 17: PDF 1.7 Standard. 20: PDF 2.0 Standard. LibreOffice only.'
+              ConvertOOoTargetToPDFTarget:
+                type: boolean
+                default: false
+                description: Renames .od[tpgs] links to .pdf in the exported PDF, leaving the source untouched. LibreOffice only.
+              ExportFormFields:
+                type: boolean
+                default: true
+                description: Specifies whether form fields are exported as widgets or only as fixed print representation. LibreOffice only.
+              ExportLinksRelativeFsys:
+                type: boolean
+                default: false
+                description: Exports file system hyperlinks as relative to the source document. LibreOffice only.
+              ExportNotes:
+                type: boolean
+                default: true
+                description: Specifies if notes are exported to PDF. LibreOffice only.
+              ExportNotesPages:
+                type: boolean
+                default: false
+                description: Specifies if notes pages are exported to PDF (Impress only). LibreOffice only.
+              FormsType:
+                type: integer
+                default: 0
+                enum:
+                - 0
+                - 1
+                - 2
+                - 3
+                description: 'Format for PDF form submission. 0: FDF. 1: PDF. 2: HTML. 3: XML. LibreOffice only.'
+              IsAddStream:
+                type: boolean
+                default: false
+                description: Adds a stream containing the original document for archiving (PDF Import only). LibreOffice only.
+              IsSkipEmptyPages:
+                type: boolean
+                default: false
+                description: Suppresses auto-inserted empty pages (Writer only). LibreOffice only.
+              UseTransitionEffects:
+                type: boolean
+                default: true
+                description: Exports slide transitions to PDF (Impress only). LibreOffice only.
+              DocumentOpenPassword:
+                type: string
+                description: Password required to open the PDF. Only active when `EncryptFile` is true.
+              EncryptFile:
+                type: boolean
+                default: false
+                description: Encrypt the PDF with AES-256; the `DocumentOpenPassword` is required to open it. The document properties (Title, Author, Subject, and the other Info strings) are encrypted as well, so they cannot be read without the password.
+              PermissionPassword:
+                type: string
+                description: Password required to change restricted permissions. Only active when `RestrictPermissions` is true.
+              RestrictPermissions:
+                type: boolean
+                default: false
+                description: Enables restricted permissions in the PDF document (printing, copying, changes). Must be used with `PermissionPassword`.
+              Changes:
+                type: integer
+                default: 4
+                enum:
+                - 0
+                - 1
+                - 2
+                - 3
+                - 4
+                description: 'What changes are allowed in the PDF. 0: None. 1: Insert/delete/rotate pages. 2: Fill forms. 3: Comment/fill forms. 4: Any except page extraction. Requires `RestrictPermissions: true` and `PermissionPassword`.'
+              EnableCopyingOfContent:
+                type: boolean
+                default: true
+                description: 'Allows copying content to other documents. Requires `RestrictPermissions: true` and `PermissionPassword`.'
+              EnableTextAccessForAccessibilityTools:
+                type: boolean
+                default: true
+                description: 'Allows text extraction for accessibility tools. Requires `RestrictPermissions: true` and `PermissionPassword`.'
+              Printing:
+                type: integer
+                default: 2
+                enum:
+                - 0
+                - 1
+                - 2
+                description: 'Allowed printing. 0: None. 1: Low resolution (150 DPI). 2: Max resolution. Requires `RestrictPermissions: true` and `PermissionPassword`.'
+              MaxImageResolution:
+                type: integer
+                default: 300
+                enum:
+                - 75
+                - 150
+                - 300
+                - 600
+                - 1200
+                description: Reduce images to this DPI when `ReduceImageResolution` is true. LibreOffice only.
+              ReduceImageResolution:
+                type: boolean
+                default: false
+                description: Reduces image resolution to `MaxImageResolution`. LibreOffice only.
+              UseLosslessCompression:
+                type: boolean
+                default: true
+                description: Use PNG (lossless) or JPEG compression for graphics. LibreOffice only.
+              Watermark:
+                type: string
+                description: Legacy field (backward compatible). Renders a single centered watermark at 45° with default styling on every page of the exported PDF file. It counts towards the maximum of 4 watermarks. Supported by all converters.
+              Watermarks:
+                type: array
+                description: 'New in v5.3.0. Define up to 4 watermarks per document, each fully configurable. Can be used simultaneously with the legacy `Watermark` field, which counts towards the 4: above that, the render returns `A maximum of 4 watermarks can be used at the same time`. Supported by all converters.'
+                maxItems: 4
+                items:
+                  type: object
+                  required:
+                  - text
+                  properties:
+                    text:
+                      type: string
+                      maxLength: 2000
+                      description: The watermark label. Supports `{#PAGE_NUMBER}` and `{#PAGE_TOTAL}` variables for dynamic page numbering.
+                      example: Confidential - Page {#PAGE_NUMBER} / {#PAGE_TOTAL}
+                    anchor:
+                      type: string
+                      default: center
+                      description: Position of the watermark on the page.
+                      enum:
+                      - topLeft
+                      - top
+                      - topRight
+                      - left
+                      - center
+                      - right
+                      - bottomLeft
+                      - bottom
+                      - bottomRight
+                    offsetX:
+                      type: number
+                      default: 0
+                      description: Horizontal offset in points (pt) from the anchor. In PDFs, the origin is bottom-left, so positive values move right.
+                    offsetY:
+                      type: number
+                      default: 0
+                      description: Vertical offset in points (pt) from the anchor. Positive values move up.
+                    rotation:
+                      type: number
+                      minimum: -360
+                      maximum: 360
+                      description: Rotation in degrees, between -360 and 360. Defaults to 45 for the `center` anchor, 0 for others. For non-center anchors, only 0, 90, or -90 are allowed.
+                    color:
+                      type: string
+                      default: '#000000'
+                      description: Watermark text color in `#RGB` or `#RRGGBB` format.
+                      example: '#000000'
+                    size:
+                      type: number
+                      minimum: 1
+                      maximum: 2000
+                      description: Font size in pt. For `center` anchor, defaults to automatic. For all other anchors, defaults to 12.
+                    opacity:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      description: Opacity between 0 and 1. For `center` anchor, defaults to 0.1. For all other anchors, defaults to 1.
+                    font:
+                      type: string
+                      default: Helvetica
+                      description: Font family for the watermark text.
+                      enum:
+                      - Courier
+                      - Courier-Bold
+                      - Courier-Oblique
+                      - Courier-BoldOblique
+                      - Helvetica
+                      - Helvetica-Bold
+                      - Helvetica-Oblique
+                      - Helvetica-BoldOblique
+                      - Times-Roman
+                      - Times-Bold
+                      - Times-Italic
+                      - Times-BoldItalic
+                    fromPage:
+                      type: integer
+                      minimum: 1
+                      default: 1
+                      description: First page (1-based) on which the watermark is applied.
+                    toPage:
+                      type: integer
+                      minimum: 1
+                      description: Last page (1-based) on which the watermark is applied. Defaults to all remaining pages.
+              UseTaggedPDF:
+                type: boolean
+                default: false
+                description: Creates a PDF with special tags (Tagged PDF). LibreOffice only.
+              PDFUACompliance:
+                type: boolean
+                default: false
+                description: Enables the PDF/UA Universal Accessibility standard (ISO 14289). LibreOffice only.
+              AllowDuplicateFieldNames:
+                type: boolean
+                default: false
+                description: Allows export of multiple form fields with the same name. LibreOffice only.
+              CenterWindow:
+                type: boolean
+                default: false
+                description: Opens the PDF centered on screen. LibreOffice only.
+              DisplayPDFDocumentTitle:
+                type: boolean
+                default: true
+                description: Shows the document title in the viewer window. LibreOffice only.
+              ExportBookmarks:
+                type: boolean
+                default: true
+                description: Exports bookmarks to PDF. LibreOffice only.
+              ExportBookmarksToPDFDestination:
+                type: boolean
+                default: false
+                description: Exports bookmarks as named destinations. LibreOffice only.
+              FirstPageOnLeft:
+                type: boolean
+                default: false
+                description: 'Used with `PageLayout`: the odd first page appears on the left. LibreOffice only.'
+              HideViewerMenubar:
+                type: boolean
+                default: false
+                description: Hides the PDF viewer menubar. LibreOffice only.
+              HideViewerToolbar:
+                type: boolean
+                default: false
+                description: Hides the PDF viewer toolbar. LibreOffice only.
+              HideViewerWindowControls:
+                type: boolean
+                default: false
+                description: Hides the PDF viewer window controls. LibreOffice only.
+              InitialPage:
+                type: integer
+                default: 1
+                description: Page number on which the PDF opens. LibreOffice only.
+              InitialView:
+                type: integer
+                default: 0
+                enum:
+                - 0
+                - 1
+                - 2
+                description: 'Display mode on open. 0: None. 1: Outline pane. 2: Thumbnail pane. LibreOffice only.'
+              Magnification:
+                type: integer
+                default: 0
+                enum:
+                - 0
+                - 1
+                - 2
+                - 3
+                - 4
+                description: 'Open action. 0: Default. 1: Fit page. 2: Fit width. 3: Fit width of bounding box. 4: Zoom set by `Zoom`. LibreOffice only.'
+              OpenBookmarkLevels:
+                type: integer
+                default: -1
+                description: Number of bookmark levels opened on startup (-1 = all). LibreOffice only.
+              OpenInFullScreenMode:
+                type: boolean
+                default: false
+                description: Opens the PDF in full screen. LibreOffice only.
+              PageLayout:
+                type: integer
+                default: 0
+                enum:
+                - 0
+                - 1
+                - 2
+                - 3
+                description: 'Page layout. 0: Reader default. 1: Single. 2: One column. 3: Two columns (see `FirstPageOnLeft`). LibreOffice only.'
+              PageRange:
+                type: string
+                description: Range of pages to include (e.g. '1-5'). Leave unset to export all pages. LibreOffice only.
+              PDFViewSelection:
+                type: integer
+                default: 0
+                enum:
+                - 0
+                - 1
+                - 2
+                description: 'PDF viewing. 0: All links as URI. 1: PDF reader only (not for PDF/A-1). 2: Internet browser with plugin (see `ExportBookmarksToPDFDestination`). LibreOffice only.'
+              ResizeWindowToInitialPage:
+                type: boolean
+                default: false
+                description: Resizes the viewer to the first page at open. LibreOffice only.
+              Zoom:
+                type: integer
+                default: 100
+                description: Zoom percent when `Magnification` is 4. LibreOffice only.
+              PixelWidth:
+                type: number
+                description: Output image width in pixels. Defaults to document width.
+              PixelHeight:
+                type: number
+                description: Output image height in pixels. Defaults to document height.
+              ColorMode:
+                type: number
+                default: 0
+                description: 'Color mode. 0: Colors. 1: Greyscale.'
+              Quality:
+                type: number
+                minimum: 1
+                maximum: 100
+                description: JPG quality, from 1 (low quality, high compression, low size) to 100 (high quality). For a `jpg` export the default is 100. For a `pdf` export, it sets the JPG compression quality of images and defaults to 90 (LibreOffice only).
+              Compression:
+                type: number
+                default: 0
+                description: PNG compression level, from 0 (disabled) to 9 (maximum).
+              Interlaced:
+                type: number
+                default: 0
+                description: 'PNG interlacing. 0: Not interlaced. 1: Interlaced.'
+              Translucent:
+                type: number
+                default: 0
+                description: 'PNG transparency. 0: No transparent background. 1: Transparent background.'
+              fieldSeparator:
+                type: string
+                description: CSV field separator character (e.g. `,`, `;`, `+`).
+              textDelimiter:
+                type: string
+                description: CSV text delimiter character (e.g. `"`).
+              characterSet:
+                type: string
+                description: CSV character encoding. See https://wiki.openoffice.org/wiki/Documentation/DevGuide/Spreadsheets/Filter_Options for accepted values (e.g. '76' for UTF-8).
+            additionalProperties: false
+  responses:
+    GenerateReportError:
+      description: Something went wrong when merging the JSON data-set into the template (the design of the template has an issue), or when setting up the webhook.
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            renderError:
+              summary: 'The document could not be generated. The message after `Unable to generate the document.` gives the cause: template design issue, impossible conversion, unknown `failOn` value, more than 4 watermarks, invalid batch options, unavailable converter, timeout...'
+              value:
+                success: false
+                error: Unable to generate the document. Format "docx" can't be converted to "xlsx".
+                code: w101
+                data:
+                  renderId: ''
+            webhookError:
+              summary: The `carbone-webhook-url` header is set but the asynchronous job could not be registered.
+              value:
+                success: false
+                error: Error while setting up the webhook
+                code: w117
+    ConvertBadRequestError:
+      description: 'The request could not be accepted: wrong content type, or document that cannot be read.'
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            notJson:
+              summary: The body must be JSON and the `Content-Type` header must be `application/json`.
+              value:
+                success: false
+                error: '"Content-Type" header is not "application/json"'
+                code: w110
+            cannotRetrieve:
+              summary: The base64 document could not be read.
+              value:
+                success: false
+                error: Cannot retrieve template
+                code: w116
+    TemplateFormatError:
+      description: Template format not supported, it must be an XML-based or Text-based document.
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              success: false
+              error: 'Template format not supported, it must be an XML-based or Text-based document: DOCX, XLSX, PPTX, ODT, ODS, ODP, ODG, XHTML, IDML, HTML, TXT, MD, CSV, XML, SVG, etc...'
+              code: w118
+    RenderSuccess:
+      description: 'On success, by default a JSON response containing the `renderId` is returned.
+
+        If the query parameter `download=true` is used, the response body is the converted/generated file stream and the Content-Type reflects the output format.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                default: true
+              data:
+                type: object
+                description: 'In asynchronous mode (`carbone-webhook-url` header set), `renderId` is an empty string: the real one is sent to the webhook.'
+                properties:
+                  renderId:
+                    type: string
+                    example: MTAuMjAuMjEuMTAgICAg.pdf
+              message:
+                type: string
+                description: 'Returned only in asynchronous mode (`carbone-webhook-url` header set). The webhook URL is then called with `{ "success": true, "data": { "renderId": "..." } }` once the document is generated.'
+                example: A render ID will be sent to your callback URL when the document is generated
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+        application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+          schema:
+            type: string
+            format: binary
+            description: DOCX
+        application/msword:
+          schema:
+            type: string
+            format: binary
+            description: DOC
+        application/vnd.oasis.opendocument.text:
+          schema:
+            type: string
+            format: binary
+            description: ODT
+        application/vnd.oasis.opendocument.text-template:
+          schema:
+            type: string
+            format: binary
+            description: OTT
+        application/epub+zip:
+          schema:
+            type: string
+            format: binary
+            description: EPUB
+        text/html:
+          schema:
+            type: string
+            format: binary
+            description: HTML
+        application/xhtml+xml:
+          schema:
+            type: string
+            format: binary
+            description: XHTML
+        text/plain:
+          schema:
+            type: string
+            format: binary
+            description: TXT
+        text/markdown:
+          schema:
+            type: string
+            format: binary
+            description: MD (Markdown)
+        application/rtf:
+          schema:
+            type: string
+            format: binary
+            description: RTF
+        application/x-latex:
+          schema:
+            type: string
+            format: binary
+            description: LaTeX
+        text/x-bibtex:
+          schema:
+            type: string
+            format: binary
+            description: BibTeX
+        text/x-tex:
+          schema:
+            type: string
+            format: binary
+            description: TeX
+        application/xml:
+          schema:
+            type: string
+            format: binary
+            description: XML / IDML
+        application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+          schema:
+            type: string
+            format: binary
+            description: XLSX
+        application/vnd.ms-excel:
+          schema:
+            type: string
+            format: binary
+            description: XLS
+        application/vnd.oasis.opendocument.spreadsheet:
+          schema:
+            type: string
+            format: binary
+            description: ODS
+        application/vnd.oasis.opendocument.spreadsheet-template:
+          schema:
+            type: string
+            format: binary
+            description: OTS
+        text/csv:
+          schema:
+            type: string
+            format: binary
+            description: CSV
+        application/dbf:
+          schema:
+            type: string
+            format: binary
+            description: DBF
+        text/dif:
+          schema:
+            type: string
+            format: binary
+            description: DIF
+        application/vnd.ms-excel.sheet.binary.macroenabled.12:
+          schema:
+            type: string
+            format: binary
+            description: XLSB
+        application/vnd.openxmlformats-officedocument.presentationml.presentation:
+          schema:
+            type: string
+            format: binary
+            description: PPTX
+        application/vnd.ms-powerpoint:
+          schema:
+            type: string
+            format: binary
+            description: PPT / PPS
+        application/vnd.oasis.opendocument.presentation:
+          schema:
+            type: string
+            format: binary
+            description: ODP
+        application/vnd.oasis.opendocument.presentation-template:
+          schema:
+            type: string
+            format: binary
+            description: OTP
+        image/png:
+          schema:
+            type: string
+            format: binary
+            description: PNG
+        image/jpeg:
+          schema:
+            type: string
+            format: binary
+            description: JPG / JPEG
+        image/gif:
+          schema:
+            type: string
+            format: binary
+            description: GIF
+        image/tiff:
+          schema:
+            type: string
+            format: binary
+            description: TIFF
+        image/bmp:
+          schema:
+            type: string
+            format: binary
+            description: BMP
+        image/svg+xml:
+          schema:
+            type: string
+            format: binary
+            description: SVG
+        image/x-emf:
+          schema:
+            type: string
+            format: binary
+            description: EMF
+        image/x-wmf:
+          schema:
+            type: string
+            format: binary
+            description: WMF
+        image/x-portable-bitmap:
+          schema:
+            type: string
+            format: binary
+            description: PBM
+        image/x-portable-graymap:
+          schema:
+            type: string
+            format: binary
+            description: PGM
+        image/x-portable-pixmap:
+          schema:
+            type: string
+            format: binary
+            description: PPM
+        image/webp:
+          schema:
+            type: string
+            format: binary
+            description: WEBP
+        application/vnd.oasis.opendocument.graphics:
+          schema:
+            type: string
+            format: binary
+            description: ODG
+        application/postscript:
+          schema:
+            type: string
+            format: binary
+            description: EPS / PostScript
+        application/zip:
+          schema:
+            type: string
+            format: binary
+            description: ZIP archive (batch output)
+    UnauthorizedError:
+      description: 'Unauthorized, please provide a correct API key on the `Authorization` header. The API key is available on your Carbone account: https://account.carbone.io'
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            invalidKey:
+              summary: The API key is missing or invalid.
+              value:
+                success: false
+                error: 'Unauthorized, please provide a correct API key on the "Authorization" header. The API key is available on your Carbone account: https://account.carbone.io'
+                code: w120
+            expiredKey:
+              summary: The API key or access token has expired.
+              value:
+                success: false
+                error: 'Unauthorized Access: The API key or access token has expired.'
+    MissingDataFieldError:
+      description: 'The ''data'' property is missing on the body request. This error applies to `carbone-version: 4` only: from `carbone-version: 5`, `data` is optional and omitting it converts the file without templating (tags left unchanged).'
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              success: false
+              error: Missing "data" property in body
+              code: w111
+    TemplateNotFoundError:
+      description: The template is not found
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              success: false
+              error: Template not found
+              code: w100
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: Get you test or production API Key on https://account.carbone.io
+      scheme: bearer
+      bearerFormat: eyJhbGci...

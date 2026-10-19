@@ -126,16 +126,6 @@ apis:
     url: https://github.com/carboneio/carbone
   - type: Documentation
     url: https://carbone.io/documentation.html
-- aid: carbone:carbone-render-api
-  name: Carbone Render API
-  description: The Render API from Carbone — 3 operation(s) for render.
-  humanURL: https://carbone.io/api-reference.html
-  baseURL: https://api.carbone.io
-  tags:
-  - Render
-  properties:
-  - type: OpenAPI
-    url: openapi/carbone-render-api-openapi.yml
 - aid: carbone:carbone-status-api
   name: Carbone Status API
   description: The Status API from Carbone — 1 operation(s) for status.
@@ -158,6 +148,26 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/carbone-template-api-openapi.yml
+- aid: carbone:carbone-convert-api
+  name: Carbone Convert API
+  description: Convert Documents
+  humanURL: https://carbone.io/api-reference.html
+  baseURL: https://api.carbone.io
+  tags:
+  - Convert
+  properties:
+  - type: OpenAPI
+    url: openapi/carbone-convert-api-openapi.yml
+- aid: carbone:carbone-document-api
+  name: Carbone Document API
+  description: Generate Documents
+  humanURL: https://carbone.io/api-reference.html
+  baseURL: https://api.carbone.io
+  tags:
+  - Document
+  properties:
+  - type: OpenAPI
+    url: openapi/carbone-document-api-openapi.yml
 common:
   - type: IssueTracker
     url: https://github.com/carboneio/carbone/issues

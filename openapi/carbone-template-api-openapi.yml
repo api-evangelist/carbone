@@ -1,43 +1,557 @@
 openapi: 3.2.0
 info:
-  title: Carbone Cloud HTTP Template API
-  description: Carbone is a document generation engine that uses Word, Excel, PowerPoint and ODF templates with JSON data to produce PDFs or office documents. The HTTP API offers a template-then-render workflow with bearer-token auth.
-  version: '4'
+  description: 'Carbone Open API reference.
+
+
+    Carbone is a document generation and conversion API, trusted by thousands of companies across finance, legal, healthcare, HR, e-commerce, and government to automate their document workflows at scale.
+
+
+    The core idea is simple: design a template (DOCX, XLSX, PPTX, ODT, HTML, Markdown, and more), provide a JSON dataset, and Carbone automatically merges them to produce a ready-to-use document: PDF, Word, Excel, Markdown, HTML, CSV, or any other supported format. Common use cases include:
+
+    - **Finance and Accounting**: Invoices, purchase orders, financial reports, tax statements, bank statements, and audit reports.
+
+    - **Legal**: Contracts, NDAs, legal agreements, court filings, and case summaries.
+
+    - **Healthcare**: Patient records, medical reports, prescriptions, discharge summaries, and insurance claim forms.
+
+    - **Government and Public Sector**: Administrative forms, public service notices, permits, official certificates, identity documents, tax declarations, and compliance reports.
+
+    - **Human Resources**: Employment contracts, onboarding packs, payslips, performance reviews, and internal communications.
+
+    - **Retail and E-commerce**: Receipts, shipping labels, delivery notes, product catalogues, and promotional materials.
+
+    - **Education**: Diplomas, certificates, transcripts, report cards, and admission letters.
+
+    - **Insurance**: Policy documents, claim reports, renewal notices, and coverage summaries.
+
+    - **Real Estate**: Lease agreements, property reports, sale contracts, and inspection certificates.
+
+    - **Logistics and Supply Chain**: Packing lists, bills of lading, customs declarations, and delivery confirmations.
+
+    - **SaaS and Technology**: Usage reports, audit logs, billing statements, and client-facing data exports.
+
+
+    Carbone provides the fastest **document converter**:
+
+    - **Office to PDF** - Convert DOCX, XLSX, PPTX, ODT, ODS, ODP, and ODG files to PDF.
+
+    - **HTML to PDF** - Convert raw HTML pages or web-based content to pixel perfect PDF.
+
+    - **HTML to Images** - Convert raw HTML pages or web-based content to PNG, JPG, or WEBP.
+
+    - **PDF to Office** - Convert PDF to DOCX, ODT, HTML, TXT (plain text extraction).
+
+    - **PDF to Image** - Convert PDF to PNG, JPG, or WEBP.
+
+    - **Office to Office** - DOCX ↔ ODT, XLSX ↔ CSV ↔ ODS, PPTX ↔ ODP.
+
+    - **Office to Image** - Convert DOCX / PPTX / XLSX to PNG, JPG, TIFF, SVG, WEBP.
+
+    - **Office to MD** - Convert DOCX/ODT to Markdown.
+
+    - **MD to PDF, Office, or Images** - Convert Markdown documents to PDF, DOCX, ODT, PNG or JPG.
+
+    - **PDF processing** - Apply password protection, watermarks, compliance settings, and more to any existing PDF.
+
+    - **Any supported format to any other supported format** - Spreadsheets, presentations, graphics, and more (see the full conversion matrix).
+
+
+    To get started:
+
+    - **Carbone Cloud API**: find your API key on your Carbone account. Home page > Copy the `production` or `test` API key.
+
+    - **Carbone Docker**: Update the `servers.url` field on the Open API specification.
+
+    - **Carbone On-premise**: Update the `servers.url` field on the Open API specification.
+
+    - **Carbone On-AWS**: Update the `servers.url` field on the Open API specification.
+
+
+    Documentation:
+
+    - Authentication
+
+    - API Flow
+
+    - API Timeout
+
+    - API Webhooks
+
+    - API Versions
+
+    - Template Storage
+
+    - Document Storage
+
+    - SDKs: Node, Javascript, Golang, PHP, Python, Rust, and Java.
+
+    - Integrations: Bubble, Make, Zapier, N8N, Odoo, Salesforce and Hubspot (Coming soon)'
+  version: V5.15.0
+  title: Carbone Template API
   contact:
-    name: Carbone API
-    url: https://carbone.io/api-reference.html
+    name: Carbone Support
+    email: support@carbone.io
+    url: https://help.carbone.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
 - url: https://api.carbone.io
-  description: Production
-security:
-- bearerAuth: []
 tags:
 - name: Template
+  description: Manage Templates
 paths:
   /template:
     post:
       tags:
       - Template
       summary: Upload a template
-      operationId: uploadTemplate
+      description: 'Uploads a new template to the Carbone storage, supporting optional metadata and advanced features like template versioning. When versioning is enabled, multiple versions of a template can be managed under the same template `id`, and specific versions can be deployed using the `deployedAt` parameter.
+
+
+        ### Features
+
+        - Metadata Support: Attach metadata such as name, comment, and tags to the template for better organization and retrieval.
+
+        - Template Versioning: By enabling the `versioning` parameter, users can manage multiple versions of a template, allowing for a history of changes and rollbacks.
+
+        - Deployed Version Control: Specify which version of a template is deployed using the `deployedAt` timestamp.
+
+        - Sample Data: Attach sample input data to templates to facilitate testing and development in the Carbone Studio environment.
+
+
+        ### Backward Compatibility
+
+        For backward compatibility, if the `versioning` parameter is not provided or is set to false, the endpoint behaves as it did in previous versions. This means it does not enable the new versioning features and maintains the returned body request `{ "success": true, "data": { "templateId": "SHA256", "templateExtension": "docx" }}` that older applications expect.
+
+
+        ### Use Cases
+
+        Ideal for template management, including maintaining multiple versions of a document template, automating document generation workflows with precise control over deployments, and enhancing template metadata for better search and retrieval.'
+      externalDocs:
+        url: https://carbone.io/documentation/developer/http-api/manage-templates.html#upload-a-template
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/carboneVersion'
       requestBody:
         required: true
+        description: Template file and metadata to upload. The template can be provided either as base64-encoded string or as multipart/form-data. It is important to ensure that the 'template' field is the last element in the request body.
         content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - template
+              properties:
+                id:
+                  type: string
+                  description: '[Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id) (64-bit format). If the `id` is provided, the new template is added to the existing Template ID’s version history. If the id field is left empty, a new Template ID is generated. Providing a Version ID (SHA256 format) is not allowed and will result in an API error.'
+                  example: ''
+                versioning:
+                  type: boolean
+                  description: 'Template versioning is **enabled** if:
+
+                    - `versioning` is "true" → a new [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id) is generated.
+
+                    - `versioning` is "true" and the `id` field is provided → the new template is added to the existing [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id)’s version history.
+
+
+                    Template versioning is **disabled** if:
+
+                    - `versioning` is "false" or "undefined", and if the `id` field is "undefined".
+
+                    '
+                template:
+                  type: string
+                  format: binary
+                  description: 'Template File, supported formats: DOCX, XLSX, PPTX, ODT, ODS, ODP, ODG, XHTML, IDML, HTML or an XML file'
+                name:
+                  type: string
+                  maxLength: 200
+                  description: Template name, 200 characters maximum.
+                comment:
+                  type: string
+                  maxLength: 200
+                  description: Template comment, 200 characters maximum.
+                category:
+                  type: string
+                  maxLength: 200
+                  description: Group multiple templates into categories, similar to folders. 200 characters maximum.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: List of tags. Duplicates are removed and the list is returned sorted alphabetically. The whole list is limited to 100 characters, which is about 8 tags of 9 characters. In multipart/form-data, send the list as a JSON string, e.g. `["invoice","v2"]`.
+                  example:
+                  - invoice
+                  - contract
+                  - v2
+                sample:
+                  type: array
+                  maxItems: 1
+                  description: Sample input data used in Carbone Studio for testing and development. A single object with the optional properties `data`, `complement`, `translations` and `enum`. In multipart/form-data, send it as a JSON string.
+                  items:
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      data:
+                        type: object
+                        description: JSON dataset merged into the template with `{d.}` tags.
+                        example: {}
+                      complement:
+                        type: object
+                        description: Extra data accessible in the template with `{c.}` tags.
+                        example: {}
+                      translations:
+                        type: object
+                        description: Localization dictionary used with `{t()}` tags.
+                        example: {}
+                      enum:
+                        type: object
+                        description: List of enumerations for use with the `convEnum` formatter.
+                        example: {}
+                  example:
+                  - data: {}
+                    complement: {}
+                    translations: {}
+                    enum: {}
+                expireAt:
+                  type: integer
+                  format: int64
+                  minimum: 0
+                  description: 'Schedule the template for deletion, as a UTC Unix timestamp in seconds. Nothing changes until that time. After it, the template is no longer listed, cannot be downloaded, and generating a document with it returns `404 Template not found`. The file itself is deleted later, once the storage retention delay has passed.
+
+
+                    `0` (default) means the template never expires.
+
+                    '
+                deployedAt:
+                  type: integer
+                  description: When generating a document with a [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id), Carbone uses the most recent deployedAt version. The deployedAt value must be a UTC Unix timestamp; values ≥ 42000000000 (year 3300) are interpreted as 'NOW'. Future values are not allowed.
+                origin:
+                  type: integer
+                  description: 'Where the template comes from, used to filter the template list. Set at upload time only: it cannot be changed afterwards.
+
+                    - `0`: API (default)
+
+                    - `1`: Studio
+
+                    - `2`: Salesforce
+
+                    - `3`: Odoo
+
+                    - `4`: HubSpot
+
+                    '
+                  example: 0
           application/json:
             schema:
               type: object
               required:
               - template
               properties:
+                id:
+                  type: string
+                  description: '[Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id) (64-bit format). If the `id` is provided, the new template is added to the existing Template ID’s version history. If the id field is left empty, a new Template ID is generated. Providing a Version ID (SHA256 format) is not allowed and will result in an API error.'
+                  example: ''
+                versioning:
+                  type: boolean
+                  description: 'Template versioning is **enabled** if:
+
+                    - `versioning` is "true" → a new [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id) is generated.
+
+                    - `versioning` is "true" and the `id` field is provided → the new template is added to the existing [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id)’s version history.
+
+
+                    Template versioning is **disabled** if:
+
+                    - `versioning` is "false" or "undefined", and if the `id` field is "undefined".
+
+                    '
                 template:
                   type: string
-                  description: Base64-encoded template file
-                payload:
+                  example: 'Base64-encoded Template File contents, supported formats: DOCX, XLSX, PPTX, ODT, ODS, ODP, ODG, XHTML, IDML, HTML or an XML file'
+                name:
                   type: string
-                  description: Optional payload for templateId hashing
+                  maxLength: 200
+                  description: Template name, 200 characters maximum.
+                comment:
+                  type: string
+                  maxLength: 200
+                  description: Template comment, 200 characters maximum.
+                category:
+                  type: string
+                  maxLength: 200
+                  description: Group multiple templates into categories, similar to folders. 200 characters maximum.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: List of tags. Duplicates are removed and the list is returned sorted alphabetically. The whole list is limited to 100 characters, which is about 8 tags of 9 characters.
+                  example:
+                  - invoice
+                  - contract
+                  - v2
+                sample:
+                  type: array
+                  maxItems: 1
+                  description: Sample input data used in Carbone Studio for testing and development. A single object with the optional properties `data`, `complement`, `translations` and `enum`.
+                  items:
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      data:
+                        type: object
+                        description: JSON dataset merged into the template with `{d.}` tags.
+                        example: {}
+                      complement:
+                        type: object
+                        description: Extra data accessible in the template with `{c.}` tags.
+                        example: {}
+                      translations:
+                        type: object
+                        description: Localization dictionary used with `{t()}` tags.
+                        example: {}
+                      enum:
+                        type: object
+                        description: List of enumerations for use with the `convEnum` formatter.
+                        example: {}
+                  example:
+                  - data: {}
+                    complement: {}
+                    translations: {}
+                    enum: {}
+                expireAt:
+                  type: integer
+                  format: int64
+                  minimum: 0
+                  description: 'Schedule the template for deletion, as a UTC Unix timestamp in seconds. Nothing changes until that time. After it, the template is no longer listed, cannot be downloaded, and generating a document with it returns `404 Template not found`. The file itself is deleted later, once the storage retention delay has passed.
+
+
+                    `0` (default) means the template never expires.
+
+                    '
+                deployedAt:
+                  type: integer
+                  description: When generating a document with a [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id), Carbone uses the most recent deployedAt version. The deployedAt value must be a UTC Unix timestamp; values ≥ 42000000000 (year 3300) are interpreted as 'NOW'. Future values are not allowed.
+                origin:
+                  type: integer
+                  description: 'Where the template comes from, used to filter the template list. Set at upload time only: it cannot be changed afterwards.
+
+                    - `0`: API (default)
+
+                    - `1`: Studio
+
+                    - `2`: Salesforce
+
+                    - `3`: Odoo
+
+                    - `4`: HubSpot
+
+                    '
+                  example: 0
       responses:
         '200':
-          description: Template uploaded
+          description: On success, returns metadata about the uploaded template. When versioning is enabled, it returns a comprehensive object containing identifiers (`id` and `versionId`), file type, size, and creation timestamp. When versioning is disabled or undefined (`versioning` and `id` fields not provided), it returns only `templateId` (SHA-256 hash of the template file) and `templateExtension`.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    oneOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Template ID.
+                        versionId:
+                          type: string
+                          description: Version ID of the template.
+                        type:
+                          type: string
+                          description: Type of the template file.
+                        size:
+                          type: integer
+                          description: Size of the template file in bytes.
+                        createdAt:
+                          type: integer
+                          description: UTC Unix timestamp of when the template was created.
+                        deployedAt:
+                          type: integer
+                          description: UTC Unix timestamp of when the template version was deployed. Returns 0 if not deployed.
+                    - type: object
+                      properties:
+                        templateId:
+                          type: string
+                          description: SHA-256 hash of the template file (for backward compatibility).
+                        templateExtension:
+                          type: string
+                          description: Detected file extension of the template (e.g. `docx`).
+        '400':
+          description: 'The request body could not be accepted: a rejected metadata value, invalid sample data, or a malformed upload.'
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                invalidMetadata:
+                  summary: A metadata field was rejected. The message names the offending field and the expected range or format.
+                  value:
+                    success: false
+                    error: 'Invalid template metadata. Error: expireAt (-1) must be an integer between 0 and 9007199254740991.'
+                    code: w124
+                invalidSample:
+                  summary: The `sample` field does not match the expected format `[{data, complement, enum, translations}]`.
+                  value:
+                    success: false
+                    error: Cannot store JSON sample with template file
+                    code: w128
+                cannotStore:
+                  summary: The template file could not be stored.
+                  value:
+                    success: false
+                    error: Cannot store template
+                    code: w109
+                fieldOrder:
+                  summary: In multipart/form-data, the `id` and `versioning` fields must be sent before the `template` file field.
+                  value:
+                    success: false
+                    error: The 'id' field must be sent before the 'template' file field in the form data.
+                    code: w131
+                contentType:
+                  summary: The body must be multipart/form-data or JSON, and the Content-Type header must match.
+                  value:
+                    success: false
+                    error: Content-Type header should be multipart/form-data (preferred) or application/json (base64 mode)
+                    code: w106
+                malformedForm:
+                  summary: The multipart/form-data body could not be parsed, or the template file exceeds the size limit.
+                  value:
+                    success: false
+                    error: Try uploading your file using form data
+                    code: w107
+                fieldsTooLarge:
+                  summary: In multipart/form-data, the non-file fields (such as `sample`) exceed the JSON size limit.
+                  value:
+                    success: false
+                    error: Content too large, the JSON size limit is X Bytes
+                    code: w121
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '413':
+          description: 'JSON (base64) mode only: the template, or the template and sample data together, exceed the size limit. In multipart/form-data mode, an oversized file returns a `400` error.'
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                templateTooLarge:
+                  summary: In JSON (base64) mode, the template file exceeds the size limit.
+                  value:
+                    success: false
+                    error: Template too large, the file size limit is X Bytes
+                    code: w119
+                jsonTooLarge:
+                  summary: In JSON (base64) mode, the template and the sample data together exceed the size limit.
+                  value:
+                    success: false
+                    error: 'Template or sample data is too large. The combined size of both exceeds the limit: X Bytes'
+                    code: w129
+        '415':
+          $ref: '#/components/responses/TemplateFormatError'
+        '422':
+          $ref: '#/components/responses/MissingTemplateFieldError'
+        '500':
+          $ref: '#/components/responses/ServerOrDatabaseError'
+      operationId: postTemplate
+      x-operation-id-source: derived
+  /template/{templateId-or-versionId}:
+    patch:
+      tags:
+      - Template
+      summary: Update template metadata
+      description: 'Updates specific metadata and attributes of an existing template identified by its ID. This endpoint is crucial for managing the lifecycle and details of templates without the need to re-upload the template file. It allows for precise control over template metadata, versioning, and deployment states.
+
+
+        ### Features
+
+        - Metadata Management: Modify template metadata such as name, comment, and tags for improved organization and searchability.
+
+        - Version Deployment: Update the `deployedAt` field to control which version of a template is actively deployed, ensuring that the correct template version is used in document generation processes.
+
+        - Lifecycle Control: Manage the template''s lifecycle by updating the expiration timestamp, allowing for fine-grained control over template availability.
+
+
+        ### Which version is patched
+
+        The identifier in the URL decides which version is patched:
+
+        - With a Template ID (64-bit format), Carbone patches the **currently deployed version** of that template.
+
+        - With a Version ID (SHA256 format), Carbone patches that exact version.
+
+
+        ### Use Cases
+
+        Updating template metadata to reflect changes in document usage or categorization, switching between template versions for deployment to support different document generation needs, and managing template lifecycle by setting expiration dates to automatically retire outdated templates.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/templateIdOrVersionId'
+      - $ref: '#/components/parameters/carboneVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: '[Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id) (64-bit format) the patched version belongs to. Providing a Version ID (SHA256 format) is not allowed and will result in an API error.
+
+
+                    Changing this value moves the version to another Template ID. Target the version with its **Version ID** in the URL, otherwise you move the version that is currently deployed, and the original Template ID falls back to its next most recent version, or stops resolving if it has none left. An error is returned if the move creates a `deployedAt` conflict with the version already deployed under the destination Template ID.
+
+                    '
+                name:
+                  type: string
+                  maxLength: 200
+                  description: Template name, 200 characters maximum.
+                comment:
+                  type: string
+                  maxLength: 200
+                  description: Template comment, 200 characters maximum.
+                category:
+                  type: string
+                  maxLength: 200
+                  description: Group multiple templates into categories, similar to folders. 200 characters maximum.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: List of tags. Duplicates are removed and the list is returned sorted alphabetically. The whole list is limited to 100 characters, which is about 8 tags of 9 characters.
+                expireAt:
+                  type: integer
+                  format: int64
+                  minimum: 0
+                  description: 'Schedule the template for deletion, as a UTC Unix timestamp in seconds. Nothing changes until that time. After it, the template is no longer listed, cannot be downloaded, and generating a document with it returns `404 Template not found`. The file itself is deleted later, once the storage retention delay has passed.
+
+
+                    Send `0` to cancel a scheduled deletion and make the template permanent again. Omit the field to leave the current expiration untouched.
+
+                    '
+                deployedAt:
+                  type: integer
+                  format: int64
+                  description: When generating a document with a [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id), Carbone uses the most recent deployedAt version. The deployedAt value must be a UTC Unix timestamp; values ≥ 42000000000 (year 3300) are interpreted as 'NOW'. Future values are not allowed.
+      responses:
+        '200':
+          description: Template metadata updated successfully. The response always includes `versionId`, plus any fields provided in the request body are echoed back.
           content:
             application/json:
               schema:
@@ -48,39 +562,641 @@ paths:
                   data:
                     type: object
                     properties:
-                      templateId:
+                      versionId:
                         type: string
-  /template/{templateId}:
-    parameters:
-    - in: path
-      name: templateId
-      required: true
-      schema:
-        type: string
+                        description: Version ID of the updated template.
+                      name:
+                        type: string
+                        description: Template name, returned if updated in this request.
+                      comment:
+                        type: string
+                        description: Template comment, returned if updated in this request.
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                        description: List of tags, returned if updated in this request.
+                      category:
+                        type: string
+                        description: Category name used to group templates, returned if updated in this request.
+                      deployedAt:
+                        type: integer
+                        description: UTC Unix timestamp of the deployed version, returned if updated in this request.
+                      expireAt:
+                        type: integer
+                        format: int64
+                        description: UTC Unix timestamp at which the template stops being returned by the API, returned if updated in this request. `0` means the template never expires.
+        '400':
+          description: 'The request could not be accepted: a rejected metadata value, a field that cannot be patched, an empty body, or an invalid ID in the URL.'
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                invalidMetadata:
+                  summary: A field value was rejected. The message names the offending field and the expected range or format.
+                  value:
+                    success: false
+                    error: 'Invalid template metadata. Error: expireAt (-1) must be an integer between 0 and 9007199254740991.'
+                    code: w124
+                fieldNotPatchable:
+                  summary: Only `id`, `name`, `comment`, `tags`, `category`, `deployedAt` and `expireAt` can be patched.
+                  value:
+                    success: false
+                    error: 'Invalid template metadata. Error: "origin" is not allowed.'
+                    code: w124
+                emptyBody:
+                  summary: At least one field must be sent.
+                  value:
+                    success: false
+                    error: 'Invalid template metadata. Error: No valid attribute provided.'
+                    code: w124
+                invalidId:
+                  summary: The ID in the URL is not a Template ID (64-bit) or a Version ID (SHA256).
+                  value:
+                    success: false
+                    error: Invalid or undefined TemplateId or RenderId in the URL
+                    code: w115
+                deployedAtConflict:
+                  summary: '`deployedAt` conflicts with the currently deployed version, or moves the deployed version back in time.'
+                  value:
+                    success: false
+                    error: 'Invalid template metadata. Error: New "deployedAt" cannot be earlier than the previous value (1625097600) for the deployed template. Tip: Use value ≥ 42000000000 to deploy now (current timestamp).'
+                    code: w124
+                databaseError:
+                  summary: The update could not be saved in the template database.
+                  value:
+                    success: false
+                    error: Invalid template metadata. Database error
+                    code: w124
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerOrDatabaseError'
+        '501':
+          $ref: '#/components/responses/StatelessModeError'
+      operationId: patchTemplateByTemplateIdOrVersionId
+      x-operation-id-source: derived
     get:
       tags:
       - Template
-      summary: Download a template
-      operationId: getTemplate
+      summary: Download a template or a specific version
+      description: 'Fetches a specific template or version of a template from the Carbone storage. It supports retrieving the latest deployed version of a template using the `templateId`, as well as individual versions via `versionId`. This endpoint also allows downloading JSON data samples associated with templates or specific versions, which are used in the Studio for testing and development purposes.
+
+
+        ### Features
+
+        - Template Retrieval: Downloads the template file or its associated JSON sample based on the provided ID.
+
+        - Version Specificity: Retrieve specific versions of a template using `versionId`, or fetch the latest deployed template using `templateId`.
+
+        - Data Samples: Access data samples stored with templates or versions, which are useful for testing and development in the Carbone Studio environment.
+
+
+        ### Parameters
+
+        The `id` of the template or version to download, can also be specified as `{templateId}_sample.json` or `{versionId}_sample.json` to download associated data samples.
+
+
+        ### Use Cases
+
+        Ideal for accessing templates and their associated data samples for testing, integration, or deployment purposes. Supports scenarios requiring version-specific template retrieval or the latest deployed template versions.'
+      externalDocs:
+        url: https://carbone.io/documentation/developer/http-api/manage-templates.html#download-a-template
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/templateIdOrVersionId'
+      - $ref: '#/components/parameters/carboneVersion'
       responses:
         '200':
-          description: Template file
-          content:
-            application/octet-stream:
+          description: Stream of the file content
+          headers:
+            content-disposition:
               schema:
                 type: string
-                format: binary
+              description: 'Template name, for instance: ''filename="{templateid}.docx"''.'
+            content-type:
+              schema:
+                type: string
+              description: File type
+        '400':
+          description: The template ID in the URL is not valid, or the template could not be retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                invalidId:
+                  summary: The ID in the URL is not a Template ID (64-bit) or a Version ID (SHA256).
+                  value:
+                    success: false
+                    error: Invalid or undefined TemplateId or RenderId in the URL
+                    code: w115
+                cannotRetrieve:
+                  summary: The template file could not be read from the storage.
+                  value:
+                    success: false
+                    error: Cannot retrieve template
+                    code: w116
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerOrDatabaseError'
+      operationId: getTemplateByTemplateIdOrVersionId
+      x-operation-id-source: derived
     delete:
+      summary: Delete a template or a specific version
+      description: 'Removes a specific template or a specific version of a template from the Carbone storage. This endpoint accepts both the `templateId` and `versionId`, enabling precise control over which templates or versions are deleted.
+
+
+        ### Features
+
+        - Template and Version Deletion: Deletes either the entire template, including all its versions, when using a `templateId`, or a specific version of a template when using a `versionId`.
+
+        - Soft Deletion Mechanism: The deletion process sets the `expireAt` timestamp to the current time: the template immediately stops being returned by the API, then the file is removed once the server''s retention delay has passed (Carbone Cloud: 24 hours). This is equivalent to calling `PATCH /template/{id}` with `expireAt` set to the current timestamp.
+
+        - Bulk Version Deletion: When a `templateId` is specified, all versions of the template are marked for deletion unless otherwise specified.
+
+
+        ### Parameters
+
+        The ID of the template or version to delete. This can be a `templateId` to delete an entire template and its versions, or a `versionId` to delete a specific version.
+
+
+        ### Use Case
+
+        Ideal for managing the lifecycle of templates, such as cleaning up outdated versions, removing obsolete templates, or archiving specific versions while maintaining the overall template integrity.'
+      externalDocs:
+        url: https://carbone.io/documentation/developer/http-api/manage-templates.html#delete-a-template
       tags:
       - Template
-      summary: Delete a template
-      operationId: deleteTemplate
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/templateIdOrVersionId'
+      - $ref: '#/components/parameters/carboneVersion'
       responses:
         '200':
-          description: Deleted
+          description: The template is deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                    example: Template deleted
+        '400':
+          description: The template ID in the URL is not valid, or the template could not be deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                invalidId:
+                  summary: The ID in the URL is not a Template ID (64-bit) or a Version ID (SHA256).
+                  value:
+                    success: false
+                    error: Invalid or undefined TemplateId or RenderId in the URL
+                    code: w115
+                cannotDelete:
+                  summary: The template could not be marked for deletion.
+                  value:
+                    success: false
+                    error: Cannot delete template
+                    code: w105
+                databaseError:
+                  summary: The deletion could not be saved in the template database.
+                  value:
+                    success: false
+                    error: Invalid template metadata. Database error
+                    code: w124
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerOrDatabaseError'
+      operationId: deleteTemplateByTemplateIdOrVersionId
+      x-operation-id-source: derived
+  /templates:
+    get:
+      tags:
+      - Template
+      summary: List all templates
+      description: 'Retrieves a list of templates from the Carbone storage; with comprehensive filtering, searching, and pagination capabilities. By default, the endpoint returns all deployed templates, sorted by creation date in descending order, excluding any that have expired. It supports filtering by various criteria such as template ID, version ID, and category, offering flexibility to retrieve specific subsets of templates. Additionally, it supports fuzzy search in template names and exact matches on IDs and version IDs, enhancing discoverability.
+
+
+        ### Features
+
+        - Filtering: Filter templates by ID, version ID, and category to narrow down results based on specific criteria.
+
+        - Search Support: Utilize fuzzy search for template names and exact matches for IDs and version IDs to quickly locate desired templates.
+
+        - Version Inclusion: Include all versions of a template in the results by setting the `includeVersions` parameter to true, allowing for comprehensive version tracking.
+
+        - Pagination: Employ cursor-based pagination to efficiently navigate through large datasets, enabling scalable data retrieval.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: query
+        description: Filter by [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id) (64-bit format). Providing a Version ID (SHA256 format) is not allowed and will result in an API error..
+        required: false
+        schema:
+          type: string
+      - name: versionId
+        in: query
+        description: Filter by [Version ID](https://carbone.io/documentation/developer/http-api/introduction.html#version-id) (SHA256 format).
+        required: false
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: Filter by category.
+        required: false
+        schema:
+          type: string
+          maxLength: 200
+      - name: origin
+        in: query
+        required: false
+        description: 'Filter templates by their upload origin.
+
+          - `0`: Templates uploaded via the API.
+
+          - `1`: Templates uploaded via the Studio.
+
+          - `2`: Templates uploaded via the Salesforce integration.
+
+          - `3`: Templates uploaded via the Odoo integration.
+
+          - `4`: Templates uploaded via the HubSpot integration.
+
+          '
+        schema:
+          type: number
+      - name: includeVersions
+        in: query
+        description: By default equals to false. Use true to list all versions for a specific template ID.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: search
+        in: query
+        description: Search in template name (fuzzy search), [Version ID](https://carbone.io/documentation/developer/http-api/introduction.html#version-id) (exact match), or [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id) (exact match).
+        required: false
+        schema:
+          type: string
+          maxLength: 200
+      - name: limit
+        in: query
+        description: Limit the number of items returned, from 1 to 100 (100 by default).
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: cursor
+        in: query
+        description: A cursor to use in pagination. The cursor defines your place in the list for fetching the next set of results.
+        required: false
+        schema:
+          type: string
+      - $ref: '#/components/parameters/carboneVersion'
+      responses:
+        '200':
+          description: List of deployed templates and their versions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: 'A constant identifier for a template (format: 64-bit), and used to generate documents:'
+                        versionId:
+                          type: string
+                          description: 'A unique identifier for a specific version of a template (format: SHA-256 hash).'
+                        deployedAt:
+                          type: integer
+                          format: int64
+                          description: When generating a document with a [Template ID](https://carbone.io/documentation/developer/http-api/introduction.html#template-id), Carbone uses the most recent deployedAt version. The deployedAt value must be a UTC Unix timestamp; values ≥ 42000000000 (year 3300) are interpreted as 'NOW'. Future values are not allowed.
+                        createdAt:
+                          type: integer
+                          format: int64
+                          description: UTC Unix timestamp.
+                        expireAt:
+                          type: integer
+                          format: int64
+                          description: UTC Unix timestamp at which the template stops being returned by the API, before being removed once the server's retention delay has passed. `0` means the template never expires.
+                        size:
+                          type: integer
+                          format: int64
+                          description: File size in bytes.
+                        type:
+                          type: string
+                          description: File type (e.g. 'docx', 'xlsx', 'pptx', and more...)
+                        name:
+                          type: string
+                          description: Template Name.
+                        category:
+                          type: string
+                          description: Category of the template.
+                        comment:
+                          type: string
+                          description: Template Comments.
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          description: Template Tags.
+                        origin:
+                          type: number
+                          description: 'Upload origin of templates:
+
+                            - `0`: Templates uploaded via the API.
+
+                            - `1`: Templates uploaded via the Studio.
+
+                            - `2`: Templates uploaded via the Salesforce integration.
+
+                            - `3`: Templates uploaded via the Odoo integration.
+
+                            - `4`: Templates uploaded via the HubSpot integration.
+
+                            '
+                  hasMore:
+                    type: boolean
+                    description: Indicates whether additional templates are available beyond the current set. If `false`, the current response contains the last page of results.
+                    example: true
+                  nextCursor:
+                    type: string
+                    description: If `hasMore` is `true`, this value specifies the cursor to use in the next request (via the `cursor` query parameter) to fetch the subsequent page of templates.
+                    example: cursor_hash
+        '400':
+          $ref: '#/components/responses/InvalidSearchFilters'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerOrDatabaseError'
+        '501':
+          $ref: '#/components/responses/StatelessModeError'
+      operationId: getTemplates
+      x-operation-id-source: derived
+  /templates/categories:
+    get:
+      tags:
+      - Template
+      summary: List all categories used in templates
+      description: 'Retrieve a list of all categories used in **deployed** templates, sorted by name. Categories function similarly to folders, allowing you to group and organize your templates effectively (e.g. "customer-x", "project-2026", "finances").
+
+
+        Practical Usage:
+
+        - **Uploading a Template:** When uploading a template, you can specify a category.
+
+        - **Updating a Template:** You can add or modify the category when updating template metadata.
+
+        - **Listing Templates:** You can filter templates by category to quickly find that are relevant to a specific function or type.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/carboneVersion'
+      responses:
+        '200':
+          description: List of categories used in templates.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+        '400':
+          description: The template database could not be read.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  error: Invalid search filters. Database error
+                  code: w125
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerOrDatabaseError'
+        '501':
+          $ref: '#/components/responses/StatelessModeError'
+      operationId: getTemplatesCategories
+      x-operation-id-source: derived
+  /templates/tags:
+    get:
+      tags:
+      - Template
+      summary: List all tags used in templates
+      description: 'List all tags currently used in **deployed** templates, sorted by name.
+
+
+        Tags are labels that you can attach to your templates for better organization. They help you categorize templates based on different criteria, such as the type of document (e.g., "invoice", "contract") or the version of the template (e.g., "v19.2.1").
+
+
+        Practical Usage:
+
+        - **Uploading a Template:** When uploading a template, you can specify tags to categorize it.
+
+        - **Updating a Template:** You can add or modify tags when updating template metadata.
+
+        - **Listing Templates:** This allows you to see which tags are assigned to each template, helping you to better organize templates. It is not possible to filter templates based on tags for the moment.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/carboneVersion'
+      responses:
+        '200':
+          description: List of tags used in templates.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+        '400':
+          description: The template database could not be read.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  error: Invalid search filters. Database error
+                  code: w125
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/ServerOrDatabaseError'
+        '501':
+          $ref: '#/components/responses/StatelessModeError'
+      operationId: getTemplatesTags
+      x-operation-id-source: derived
 components:
+  responses:
+    StatelessModeError:
+      description: 'Carbone On-Premise only: this endpoint needs the template database, and the server runs in stateless mode (no database).'
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              success: false
+              error: Carbone is running in stateless mode (no database), this endpoint is not available in this mode
+              code: w130
+    TemplateNotFoundError:
+      description: The template is not found
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              success: false
+              error: Template not found
+              code: w100
+    ServerOrDatabaseError:
+      description: Server or Database Error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              error:
+                type: string
+                example: Server or Database error.
+    InvalidSearchFilters:
+      description: A query parameter was rejected, or the template database could not be read. The message after `Invalid search filters.` names the offending parameter and the expected range or format, or says `Database error`.
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              success: false
+              error: 'Invalid search filters. Error: limit (500) must be an integer between 1 and 101.'
+              code: w125
+    MissingTemplateFieldError:
+      description: The `template` field is empty on the body request
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              success: false
+              error: '"template" field is empty'
+              code: w112
+    UnauthorizedError:
+      description: 'Unauthorized, please provide a correct API key on the `Authorization` header. The API key is available on your Carbone account: https://account.carbone.io'
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            invalidKey:
+              summary: The API key is missing or invalid.
+              value:
+                success: false
+                error: 'Unauthorized, please provide a correct API key on the "Authorization" header. The API key is available on your Carbone account: https://account.carbone.io'
+                code: w120
+            expiredKey:
+              summary: The API key or access token has expired.
+              value:
+                success: false
+                error: 'Unauthorized Access: The API key or access token has expired.'
+    TemplateFormatError:
+      description: Template format not supported, it must be an XML-based or Text-based document.
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              success: false
+              error: 'Template format not supported, it must be an XML-based or Text-based document: DOCX, XLSX, PPTX, ODT, ODS, ODP, ODG, XHTML, IDML, HTML, TXT, MD, CSV, XML, SVG, etc...'
+              code: w118
+  parameters:
+    templateIdOrVersionId:
+      in: path
+      name: templateId-or-versionId
+      description: Unique identifier of the template or version ID
+      schema:
+        type: string
+      required: true
+    carboneVersion:
+      name: carbone-version
+      description: 'Carbone API major version to use. Only a major version can be specified: it automatically includes all future minor versions and patches.
+
+        - `5`: latest version, recommended.
+
+        - `4`: default when the header is not provided.
+
+        - `3`: legacy.
+
+        - `staging`: not intended for production environments.
+
+
+        It is strongly recommended to always set this header explicitly to avoid unexpected behavior.
+
+        [See API versioning documentation](https://carbone.io/documentation/developer/http-api/introduction.html#api-version)
+
+        '
+      in: header
+      required: true
+      schema:
+        type: string
+        enum:
+        - '5'
+        - '4'
+        - '3'
+        - staging
+        default: '5'
   securitySchemes:
     bearerAuth:
       type: http
+      description: Get you test or production API Key on https://account.carbone.io
       scheme: bearer
-      description: Carbone Cloud API token
+      bearerFormat: eyJhbGci...

@@ -1,36 +1,150 @@
 openapi: 3.2.0
 info:
-  title: Carbone Cloud HTTP Status API
-  description: Carbone is a document generation engine that uses Word, Excel, PowerPoint and ODF templates with JSON data to produce PDFs or office documents. The HTTP API offers a template-then-render workflow with bearer-token auth.
-  version: '4'
+  description: 'Carbone Open API reference.
+
+
+    Carbone is a document generation and conversion API, trusted by thousands of companies across finance, legal, healthcare, HR, e-commerce, and government to automate their document workflows at scale.
+
+
+    The core idea is simple: design a template (DOCX, XLSX, PPTX, ODT, HTML, Markdown, and more), provide a JSON dataset, and Carbone automatically merges them to produce a ready-to-use document: PDF, Word, Excel, Markdown, HTML, CSV, or any other supported format. Common use cases include:
+
+    - **Finance and Accounting**: Invoices, purchase orders, financial reports, tax statements, bank statements, and audit reports.
+
+    - **Legal**: Contracts, NDAs, legal agreements, court filings, and case summaries.
+
+    - **Healthcare**: Patient records, medical reports, prescriptions, discharge summaries, and insurance claim forms.
+
+    - **Government and Public Sector**: Administrative forms, public service notices, permits, official certificates, identity documents, tax declarations, and compliance reports.
+
+    - **Human Resources**: Employment contracts, onboarding packs, payslips, performance reviews, and internal communications.
+
+    - **Retail and E-commerce**: Receipts, shipping labels, delivery notes, product catalogues, and promotional materials.
+
+    - **Education**: Diplomas, certificates, transcripts, report cards, and admission letters.
+
+    - **Insurance**: Policy documents, claim reports, renewal notices, and coverage summaries.
+
+    - **Real Estate**: Lease agreements, property reports, sale contracts, and inspection certificates.
+
+    - **Logistics and Supply Chain**: Packing lists, bills of lading, customs declarations, and delivery confirmations.
+
+    - **SaaS and Technology**: Usage reports, audit logs, billing statements, and client-facing data exports.
+
+
+    Carbone provides the fastest **document converter**:
+
+    - **Office to PDF** - Convert DOCX, XLSX, PPTX, ODT, ODS, ODP, and ODG files to PDF.
+
+    - **HTML to PDF** - Convert raw HTML pages or web-based content to pixel perfect PDF.
+
+    - **HTML to Images** - Convert raw HTML pages or web-based content to PNG, JPG, or WEBP.
+
+    - **PDF to Office** - Convert PDF to DOCX, ODT, HTML, TXT (plain text extraction).
+
+    - **PDF to Image** - Convert PDF to PNG, JPG, or WEBP.
+
+    - **Office to Office** - DOCX ↔ ODT, XLSX ↔ CSV ↔ ODS, PPTX ↔ ODP.
+
+    - **Office to Image** - Convert DOCX / PPTX / XLSX to PNG, JPG, TIFF, SVG, WEBP.
+
+    - **Office to MD** - Convert DOCX/ODT to Markdown.
+
+    - **MD to PDF, Office, or Images** - Convert Markdown documents to PDF, DOCX, ODT, PNG or JPG.
+
+    - **PDF processing** - Apply password protection, watermarks, compliance settings, and more to any existing PDF.
+
+    - **Any supported format to any other supported format** - Spreadsheets, presentations, graphics, and more (see the full conversion matrix).
+
+
+    To get started:
+
+    - **Carbone Cloud API**: find your API key on your Carbone account. Home page > Copy the `production` or `test` API key.
+
+    - **Carbone Docker**: Update the `servers.url` field on the Open API specification.
+
+    - **Carbone On-premise**: Update the `servers.url` field on the Open API specification.
+
+    - **Carbone On-AWS**: Update the `servers.url` field on the Open API specification.
+
+
+    Documentation:
+
+    - Authentication
+
+    - API Flow
+
+    - API Timeout
+
+    - API Webhooks
+
+    - API Versions
+
+    - Template Storage
+
+    - Document Storage
+
+    - SDKs: Node, Javascript, Golang, PHP, Python, Rust, and Java.
+
+    - Integrations: Bubble, Make, Zapier, N8N, Odoo, Salesforce and Hubspot (Coming soon)'
+  version: V5.15.0
+  title: Carbone Status API
   contact:
-    name: Carbone API
-    url: https://carbone.io/api-reference.html
+    name: Carbone Support
+    email: support@carbone.io
+    url: https://help.carbone.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
 - url: https://api.carbone.io
-  description: Production
-security:
-- bearerAuth: []
 tags:
 - name: Status
+  description: API Status
 paths:
   /status:
     get:
       tags:
       - Status
-      summary: Get API status
-      operationId: getStatus
+      summary: Fetch the API status and version
       security: []
       responses:
         '200':
-          description: OK
+          description: Check the API status and version
           content:
             application/json:
               schema:
                 type: object
+                example:
+                  success: true
+                  code: 200
+                  message: OK
+                  version: 5.15.0
+                properties:
+                  success:
+                    type: boolean
+                  code:
+                    type: number
+                  message:
+                    type: string
+                  version:
+                    type: string
+        '503':
+          description: The service cannot render documents (internal self-check failed), or the server is shutting down gracefully.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  code: 503
+                  message: Service cannot execute render
+                  version: 5.15.0
+      operationId: getStatus
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:
       type: http
+      description: Get you test or production API Key on https://account.carbone.io
       scheme: bearer
-      description: Carbone Cloud API token
+      bearerFormat: eyJhbGci...
