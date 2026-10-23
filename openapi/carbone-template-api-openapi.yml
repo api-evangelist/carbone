@@ -1200,3 +1200,9 @@ components:
       description: Get you test or production API Key on https://account.carbone.io
       scheme: bearer
       bearerFormat: eyJhbGci...
+x-provenance:
+  method: harvested
+  publisher: Carbone
+  source: https://carbone.io/file/carbone.OpenAPI.yml
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
