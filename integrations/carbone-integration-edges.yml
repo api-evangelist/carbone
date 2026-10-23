@@ -5,6 +5,7 @@ checked:
 - https://registry.modelcontextprotocol.io/v0/servers
 - https://zapier.com/api/v4/apps/
 - artifact-hub/integrations/artifact-hub-integration-edges.yml
+- airtable/integrations/airtable-integration-edges.yml
 marketplace_apps: []
 edges:
 - partner_name: Microsoft Azure Marketplace
@@ -98,5 +99,22 @@ edges:
   category: Artifact Hub listing (Helm chart)
   badges:
   - 'Verified publisher (Artifact Hub verified publisher: repository ownership proven)'
+- partner_name: Airtable (own)
+  partner: airtable
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://airtable.com/marketplace/blkDYrh9J4DbPp5Jq/document-generator-carbone
+  mirror_of: airtable/integrations/airtable-integration-edges.yml
+  apps:
+  - 'Document Generator '
+  listing_count: 1
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Airtable extension
 source:
 - https://zapier.com/api/v4/apps/
