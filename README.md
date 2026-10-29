@@ -1,4 +1,4 @@
-# Carbone (carbone)
+# Carbone
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,99 +66,123 @@
 
 Carbone is a document generation engine that uses Word, Excel, PowerPoint and ODF templates with JSON data to produce PDFs or office documents. The Carbone HTTP API offers a template-then-render workflow with both cloud (api.carbone.io) and on-prem deployments. The Carbone JS rendering engine is open-source and embeddable.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/carbone/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/carbone/refs/heads/main/apis.yml)
+**Areas:** Document Generation · PDF · Templates · Open Source · Office · DOCX · XLSX
 
-## Tags
+## Carbone on APIs.io
 
-- Document Generation
-- PDF
-- Templates
-- Open Source
-- Office
-- DOCX
-- XLSX
+Everything profiled for Carbone is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/carbone/](https://apis.io/providers/carbone/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (6)
 
-- **Created:** 2026-05-08
-- **Modified:** 2026-05-08
+- [Carbone Cloud HTTP API](https://apis.io/apis/carbone/cloud/) — Cloud-hosted Carbone API. Two flows — upload-once via POST /template then render with a template ID; or single-request inline-base64 render. Bearer-token…
+- [Carbone On-Premises](https://apis.io/apis/carbone/on-prem/) — Self-hosted Carbone deployment exposing the same HTTP API. Auth disabled by default; enable via configuration. 30-day free trial of paid features.
+- [Carbone Render Engine (Open Source)](https://apis.io/apis/carbone/js/) — Open-source Node.js library that powers the rendering engine. Embed directly in your application; render templates with JSON data without hitting the cloud API.
+- [Carbone Render API](https://apis.io/apis/carbone/carbone-render-api/) — The Render API from Carbone — 3 operation(s) for render.
+- [Carbone Status API](https://apis.io/apis/carbone/carbone-status-api/) — The Status API from Carbone — 1 operation(s) for status.
+- [Carbone Template API](https://apis.io/apis/carbone/carbone-template-api/) — The Template API from Carbone — 2 operation(s) for template.
 
-## APIs
+### Published properties
 
-### Carbone Cloud HTTP API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Cloud-hosted Carbone API. Two flows — upload-once via POST /template then render with a template ID; or single-request inline-base64 render. Bearer-token auth (Authorization header). Sync and async via webhooks. Hosted on European providers (OVHCloud, Scaleway, BunnyCDN).
+#### Agentic access (1)
 
-- **Human URL:** [https://carbone.io/api-reference.html](https://carbone.io/api-reference.html)
-- **Base URL:** `https://api.carbone.io`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Carbone Agentic Access](https://apis.io/agentic-access/carbone/carbone-agentic-access/)
 
-- REST
-- Templates
-- Render
-- Async
-- Webhooks
+#### Collections (4)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [Documentation](https://carbone.io/api-reference.html)
-- [Authentication](https://carbone.io/api-reference.html#authentication)
-- [SDK](https://github.com/carboneio/carbone-sdk-js)
-- [Postman Collection](collections/carbone.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/carbone.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Carbone Cloud HTTP API](https://apis.io/collections/carbone/open-carbone/)
+- [Carbone Cloud HTTP Render API](https://apis.io/collections/carbone/open-carbone-render-api/)
+- [Carbone Cloud HTTP Render Status API](https://apis.io/collections/carbone/open-carbone-status-api/)
+- [Carbone Cloud HTTP Render Template API](https://apis.io/collections/carbone/open-carbone-template-api/)
 
-### Carbone On-Premises
+#### Security (2)
 
-Self-hosted Carbone deployment exposing the same HTTP API. Auth disabled by default; enable via configuration. 30-day free trial of paid features.
+Authentication, trust centre, and vulnerability disclosure.
 
-- **Human URL:** [https://carbone.io/documentation.html](https://carbone.io/documentation.html)
-- **Base URL:** `http://<your-host>:4000`
+- [Carbone Authentication](https://apis.io/security/carbone/carbone-authentication/)
+- [Carbone Domain Security](https://apis.io/security/carbone/carbone-domain-security/)
 
-#### Tags
+#### Plans and pricing (1)
 
-- REST
-- Self-Hosted
-- On-Prem
+Published plans, tiers and prices.
 
-#### Properties
+- [Carbone Plans Pricing](https://apis.io/plans/carbone/carbone-plans-pricing/)
 
-- [Documentation](https://carbone.io/documentation.html)
-- [Postman Collection](collections/carbone.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/carbone.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Rate limits (1)
 
-### Carbone Render Engine (Open Source)
+Published request limits.
 
-Open-source Node.js library that powers the rendering engine. Embed directly in your application; render templates with JSON data without hitting the cloud API.
+- [Carbone Rate Limits](https://apis.io/rate-limits/carbone/carbone-rate-limits/)
 
-- **Human URL:** [https://github.com/carboneio/carbone](https://github.com/carboneio/carbone)
-- **Base URL:** `npm:carbone`
+#### FinOps (1)
 
-#### Tags
+What the API costs to run, by operation.
 
-- SDK
-- Open Source
-- Node.js
+- [Carbone Finops](https://apis.io/finops/carbone/carbone-finops/)
 
-#### Properties
+## Where to find this API
 
-- [Source Code](https://github.com/carboneio/carbone)
-- [Documentation](https://carbone.io/documentation.html)
-- [Postman Collection](collections/carbone.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/carbone.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-## Common Properties
-
-- [LinkedIn](https://www.linkedin.com/company/carboneio)
 - [Website](https://carbone.io/)
 - [Documentation](https://carbone.io/documentation.html)
 - [Pricing](https://carbone.io/pricing.html)
-- [Git Hub](https://github.com/carboneio)
-- [Plans](plans/carbone-plans-pricing.yml)
-- [Rate Limits](rate-limits/carbone-rate-limits.yml)
-- [Fin Ops](finops/carbone-finops.yml)
+- [Blog](https://carbone.io/blog/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 29.8** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 45.6 |
+| Contract governance | 0.0 |
+| Operational transparency | 23.7 |
+| Developer ergonomics | 31.0 |
+| Access clarity | 18.4 |
+
+**Agent readiness 20.4** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 11.8** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/carbone/](https://apis.io/providers/carbone/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Carbone: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/carbone/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
